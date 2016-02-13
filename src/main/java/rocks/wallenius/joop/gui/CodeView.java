@@ -8,7 +8,6 @@ import org.fxmisc.richtext.CodeArea;
 public class CodeView extends CodeArea {
 
     public CodeView() {
-        getStyleClass().add("code-view");
     }
 
 }

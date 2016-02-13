@@ -1,15 +1,13 @@
 package rocks.wallenius.joop.gui;
 
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 
 /**
  * Created by philipwallenius on 12/02/16.
  */
-public class ObjectView extends HBox {
+public class ObjectView extends StackPane {
 
     public ObjectView() {
-        getStyleClass().add("object-view");
     }
 
 }

@@ -4,10 +4,33 @@
 <?import javafx.scene.control.SplitPane?>
 
 <!-- Main Window -->
-<SplitPane>
-    <CodeView />
-    <SplitPane orientation="VERTICAL">
-        <ClassView />
-        <ObjectView />
-    </SplitPane>
-</SplitPane>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.VBox?>
+<BorderPane>
+    <top>
+        <VBox>
+            <MenuBar>
+                <Menu text="File">
+                    <MenuItem text="New"></MenuItem>
+                </Menu>
+            </MenuBar>
+            <ToolBar>
+                <Button text="New"></Button>
+            </ToolBar>
+        </VBox>
+    </top>
+    <center>
+        <SplitPane>
+            <CodeView styleClass="code-view" />
+            <SplitPane orientation="VERTICAL">
+                <ClassView styleClass="class-view" />
+                <ObjectView styleClass="object-view" />
+            </SplitPane>
+        </SplitPane>
+    </center>
+</BorderPane>

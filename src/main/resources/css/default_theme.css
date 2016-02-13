@@ -1,11 +1,8 @@
 .code-view {
-
 }
 
 .class-view {
-    -fx-background-color: #333333;
 }
 
 .object-view {
-    -fx-background-color: rgba(0, 202, 32, 0.74);
 }
