@@ -1,12 +1,13 @@
 <?import rocks.wallenius.joop.gui.CodeView?>
-<?import javafx.scene.layout.GridPane?>
 <?import rocks.wallenius.joop.gui.ClassView?>
-<?import javafx.scene.layout.VBox?>
 <?import rocks.wallenius.joop.gui.ObjectView?>
-<GridPane maxHeight="Infinity" maxWidth="Infinity">
-    <CodeView GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-    <GridPane GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" maxHeight="Infinity" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="0">
-        <ClassView GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-        <ObjectView GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-    </GridPane>
-</GridPane>
+<?import javafx.scene.control.SplitPane?>
+
+<!-- Main Window -->
+<SplitPane>
+    <CodeView />
+    <SplitPane orientation="VERTICAL">
+        <ClassView />
+        <ObjectView />
+    </SplitPane>
+</SplitPane>
