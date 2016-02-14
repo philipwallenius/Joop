@@ -12,22 +12,35 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.StatusBar?>
-<BorderPane>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.Tab?>
+<BorderPane fx:controller="rocks.wallenius.joop.controller.GuiController" xmlns:fx="http://javafx.com/fxml">
     <top>
         <VBox>
             <MenuBar>
                 <Menu text="File">
-                    <MenuItem text="New"></MenuItem>
+                    <MenuItem text="New" onAction="#handleNewButtonAction"></MenuItem>
+                    <MenuItem text="Open" onAction="#handleOpenButtonAction"></MenuItem>
+                    <MenuItem text="Save" onAction="#handleSaveButtonAction"></MenuItem>
+                    <MenuItem text="Compile" onAction="#handleCompileButtonAction"></MenuItem>
+                    <MenuItem text="Exit" onAction="#handleExitButtonAction"></MenuItem>
+                </Menu>
+                <Menu text="Help">
+                    <MenuItem text="About"></MenuItem>
                 </Menu>
             </MenuBar>
             <ToolBar>
-                <Button text="New"></Button>
+                <Button text="New" onAction="#handleNewButtonAction"></Button>
+                <Button text="Open" onAction="#handleOpenButtonAction"></Button>
+                <Button text="Save" onAction="#handleSaveButtonAction"></Button>
+                <Button text="Compile" onAction="#handleCompileButtonAction"></Button>
             </ToolBar>
         </VBox>
     </top>
     <center>
         <SplitPane>
-            <CodeView styleClass="code-view" />
+            <TabPane>
+            </TabPane>
             <SplitPane orientation="VERTICAL">
                 <ClassView styleClass="class-view" />
                 <ObjectView styleClass="object-view" />

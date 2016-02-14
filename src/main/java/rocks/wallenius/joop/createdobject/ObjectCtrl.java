@@ -2,7 +2,7 @@ package rocks.wallenius.joop.createdobject;
 
 /* 
 * ObjectCtrl.java
-* Controller for the CreatedObject entity and object diagram 
+* GuiController for the CreatedObject entity and object diagram
 * 
 * v1.0
 * 01/03/2012 
