@@ -5,17 +5,20 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.fxmisc.richtext.CodeArea;
 import rocks.wallenius.joop.gui.dialog.NewDialog;
 import rocks.wallenius.joop.model.Model;
 import rocks.wallenius.joop.model.entity.CustomClass;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -62,7 +65,7 @@ public class Controller {
      */
     @FXML
     protected void compileClasses(ActionEvent event) {
-        System.out.println("Clicked Compile Button!");
+//        performSaveChecks();
     }
 
     /**
@@ -112,6 +115,10 @@ public class Controller {
         CustomClass newCustomClass = new CustomClass();
         newCustomClass.setName(className);
         newCustomClass.setCode(loadClassTemplate(className));
+
+        // save new class to file
+        saveClass(newCustomClass);
+
         model.addClass(newCustomClass);
         Tab newTab = new Tab(newCustomClass.getName());
         newTab.setContent(new CodeArea(newCustomClass.getCode()));
@@ -129,6 +136,14 @@ public class Controller {
         URL url = this.getClass().getResource("/class_template.java");
         String content = new String(Files.readAllBytes(Paths.get(url.toURI())));
         return content.replace("<<CLASSNAME>>", className);
+    }
+
+    private void saveClass(CustomClass clazz) throws IOException {
+        if(clazz.getPath() == null) {
+            File file = new File(String.format("usergenerated/%s.java", clazz.getName()));
+            clazz.setPath(Paths.get(file.toURI()));
+        }
+        Files.write(clazz.getPath(), clazz.getCode().getBytes());
     }
 
 }

@@ -9,9 +9,14 @@ import java.nio.file.Path;
  */
 public class CustomClass {
 
+    private boolean changed;
     private String name;
     private String code;
     private Path path;
+
+    public CustomClass() {
+        changed = true;
+    }
 
     public String getName() {
         return name;
@@ -35,6 +40,14 @@ public class CustomClass {
 
     public void setPath(Path path) {
         this.path = path;
+    }
+
+    public boolean isChanged() {
+        return changed;
+    }
+
+    public void setChanged(boolean changed) {
+        this.changed = changed;
     }
 
 }
