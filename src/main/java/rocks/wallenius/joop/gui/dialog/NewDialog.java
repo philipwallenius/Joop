@@ -16,6 +16,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import rocks.wallenius.joop.util.ClassFileUtils;
 
 import java.util.Optional;
 
@@ -168,6 +169,13 @@ public class NewDialog extends Stage {
             return;
         }
 
+        // Validate that class doesnt exist
+        if(ClassFileUtils.exists(name)) {
+            showInvalidInputAlert("Cannot create file. File already exists.");
+            inputName.requestFocus();
+            return;
+        }
+
         // Create a new project with the inputs and close this dialog
         close();
     }
@@ -191,4 +199,7 @@ public class NewDialog extends Stage {
         }
         return Optional.of(inputName.getText().trim());
     }
+
+
+
 }
