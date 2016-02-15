@@ -2,7 +2,7 @@ package rocks.wallenius.joop.loadedclass;
 
 /* 
 * ClassCtrl.java
-* GuiController for the LoadedClass entity and class diagram
+* View for the LoadedClass entity and class diagram
 * 
 * v1.0
 * 23/02/2012 

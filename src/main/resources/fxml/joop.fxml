@@ -13,33 +13,32 @@
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.StatusBar?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.Tab?>
-<BorderPane fx:controller="rocks.wallenius.joop.controller.GuiController" xmlns:fx="http://javafx.com/fxml">
+<BorderPane fx:id="borderPane" fx:controller="rocks.wallenius.joop.controller.Controller" xmlns:fx="http://javafx.com/fxml">
     <top>
         <VBox>
             <MenuBar>
                 <Menu text="File">
-                    <MenuItem text="New" onAction="#handleNewButtonAction"></MenuItem>
-                    <MenuItem text="Open" onAction="#handleOpenButtonAction"></MenuItem>
-                    <MenuItem text="Save" onAction="#handleSaveButtonAction"></MenuItem>
-                    <MenuItem text="Compile" onAction="#handleCompileButtonAction"></MenuItem>
-                    <MenuItem text="Exit" onAction="#handleExitButtonAction"></MenuItem>
+                    <MenuItem text="New" onAction="#newCustomClass"></MenuItem>
+                    <MenuItem text="Open" onAction="#openCustomClass"></MenuItem>
+                    <MenuItem text="Save" onAction="#saveCustomClass"></MenuItem>
+                    <MenuItem text="Compile" onAction="#compileClasses"></MenuItem>
+                    <MenuItem text="Exit" onAction="#exitApplication"></MenuItem>
                 </Menu>
                 <Menu text="Help">
                     <MenuItem text="About"></MenuItem>
                 </Menu>
             </MenuBar>
             <ToolBar>
-                <Button text="New" onAction="#handleNewButtonAction"></Button>
-                <Button text="Open" onAction="#handleOpenButtonAction"></Button>
-                <Button text="Save" onAction="#handleSaveButtonAction"></Button>
-                <Button text="Compile" onAction="#handleCompileButtonAction"></Button>
+                <Button text="New" onAction="#newCustomClass"></Button>
+                <Button text="Open" onAction="#openCustomClass"></Button>
+                <Button text="Save" onAction="#saveCustomClass"></Button>
+                <Button text="Compile" onAction="#compileClasses"></Button>
             </ToolBar>
         </VBox>
     </top>
     <center>
         <SplitPane>
-            <TabPane>
+            <TabPane fx:id="tabPane">
             </TabPane>
             <SplitPane orientation="VERTICAL">
                 <ClassView styleClass="class-view" />
