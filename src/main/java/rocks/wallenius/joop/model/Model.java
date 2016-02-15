@@ -1,8 +1,7 @@
 package rocks.wallenius.joop.model;
 
-import rocks.wallenius.joop.model.entity.Clazz;
+import rocks.wallenius.joop.model.entity.CustomClass;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,26 +10,26 @@ import java.util.List;
  */
 public class Model {
 
-    private List<Clazz> classes;
+    private List<CustomClass> classes;
 
     public Model() {
-        classes = new ArrayList<Clazz>();
+        classes = new ArrayList<CustomClass>();
     }
 
-    public List<Clazz> getClasses() {
+    public List<CustomClass> getClasses() {
         return classes;
     }
 
-    public void setClasses(List<Clazz> classes) {
+    public void setClasses(List<CustomClass> classes) {
         this.classes = classes;
     }
 
-    public void addClass(Clazz clazz) {
-        classes.add(clazz);
+    public void addClass(CustomClass customClass) {
+        classes.add(customClass);
     }
 
-    public void removeClass(Clazz clazz) {
-        classes.remove(clazz);
+    public void removeClass(CustomClass customClass) {
+        classes.remove(customClass);
     }
 
 }

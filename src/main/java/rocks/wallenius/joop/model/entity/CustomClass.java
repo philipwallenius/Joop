@@ -7,7 +7,7 @@ import java.nio.file.Path;
 /**
  * Created by philipwallenius on 15/02/16.
  */
-public class Clazz {
+public class CustomClass {
 
     private String name;
     private String code;
