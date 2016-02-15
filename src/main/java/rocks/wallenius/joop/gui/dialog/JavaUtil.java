@@ -1,4 +1,4 @@
-package rocks.wallenius.joop.controller;
+package rocks.wallenius.joop.gui.dialog;
 
 import java.util.Arrays;
 import java.util.HashSet;

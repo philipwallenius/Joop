@@ -16,7 +16,6 @@ import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import rocks.wallenius.joop.controller.JavaUtil;
 
 import java.util.Optional;
 
@@ -25,18 +24,20 @@ import java.util.Optional;
  */
 public class NewDialog extends Stage {
 
-    private final static String DEFAULT_NAME = "Untitled";
+    private final static String DIALOG_TITLE = "Create New Class";
+    private final static String DIALOG_INVALID_CLASS_NAME_ERROR = "Invalid class name";
+
+    private final static String DEFAULT_CLASS_NAME = "Untitled";
 
     private final Stage parentStage;
     private TextField inputName;
     private Label labelError;
-    private boolean cancelled;
     private Button buttonOK, buttonCancel;
+    private boolean cancelled;
 
     public NewDialog(Stage parentStage) {
         super();
         this.parentStage = parentStage;
-        cancelled = false;
         initialize();
     }
 
@@ -45,8 +46,10 @@ public class NewDialog extends Stage {
      */
     private void initialize() {
 
+        cancelled = false;
+
         // Setup the stage
-        setTitle("Create New Class");
+        setTitle(DIALOG_TITLE);
         setResizable(false);
         initStyle(StageStyle.UTILITY);
         initModality(Modality.APPLICATION_MODAL);
@@ -56,7 +59,7 @@ public class NewDialog extends Stage {
         GridPane gridInputs = createGridInputs();
         GridPane gridButtons = createGridButtons();
 
-        labelError = new Label("Invalid class name");
+        labelError = new Label(DIALOG_INVALID_CLASS_NAME_ERROR);
         labelError.setVisible(false);
         GridPane gridError = new GridPane();
         gridError.setAlignment(Pos.CENTER);
@@ -99,7 +102,7 @@ public class NewDialog extends Stage {
         gridPane.setAlignment(Pos.TOP_CENTER);
 
         Label labelName = new Label("Name: ");
-        inputName = new TextField(DEFAULT_NAME);
+        inputName = new TextField(DEFAULT_CLASS_NAME);
 
         // Ensure that only numbers are entered into width and height fields
         inputName.textProperty().addListener(new ChangeListener<String>() {

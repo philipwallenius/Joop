@@ -12,7 +12,6 @@ public class CustomClass {
     private String name;
     private String code;
     private Path path;
-    private CodeArea codeArea;
 
     public String getName() {
         return name;
@@ -38,11 +37,4 @@ public class CustomClass {
         this.path = path;
     }
 
-    public CodeArea getCodeArea() {
-        return codeArea;
-    }
-
-    public void setCodeArea(CodeArea codeArea) {
-        this.codeArea = codeArea;
-    }
 }
