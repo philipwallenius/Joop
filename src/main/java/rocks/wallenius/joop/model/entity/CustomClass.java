@@ -1,5 +1,7 @@
 package rocks.wallenius.joop.model.entity;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import org.fxmisc.richtext.CodeArea;
 
 import java.nio.file.Path;
@@ -9,13 +11,13 @@ import java.nio.file.Path;
  */
 public class CustomClass {
 
-    private boolean changed;
     private String name;
     private String code;
     private Path path;
+    private BooleanProperty changed;
 
     public CustomClass() {
-        changed = true;
+        changed = new SimpleBooleanProperty(false);
     }
 
     public String getName() {
@@ -42,12 +44,15 @@ public class CustomClass {
         this.path = path;
     }
 
-    public boolean isChanged() {
+    public boolean getChanged() {
+        return changed.get();
+    }
+
+    public BooleanProperty changedProperty() {
         return changed;
     }
 
     public void setChanged(boolean changed) {
-        this.changed = changed;
+        this.changed.set(changed);
     }
-
 }

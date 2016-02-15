@@ -32,4 +32,13 @@ public class Model {
         classes.remove(customClass);
     }
 
+    public CustomClass getCustomClassByName(String name) {
+        for(CustomClass c : classes) {
+            if(c.getName().equals(name)) {
+                return c;
+            }
+        }
+        return null;
+    }
+
 }

@@ -20,8 +20,8 @@
                 <Menu text="File">
                     <MenuItem text="New" onAction="#newCustomClass"></MenuItem>
                     <MenuItem text="Open" onAction="#openCustomClass"></MenuItem>
-                    <MenuItem text="Save" onAction="#saveCustomClass"></MenuItem>
-                    <MenuItem text="Compile" onAction="#compileClasses"></MenuItem>
+                    <MenuItem text="Save" fx:id="menuItemSave" onAction="#saveCustomClass"></MenuItem>
+                    <MenuItem text="Compile" fx:id="menuItemCompile" onAction="#compileClasses"></MenuItem>
                     <MenuItem text="Exit" onAction="#exitApplication"></MenuItem>
                 </Menu>
                 <Menu text="Help">
@@ -31,8 +31,8 @@
             <ToolBar>
                 <Button text="New" onAction="#newCustomClass"></Button>
                 <Button text="Open" onAction="#openCustomClass"></Button>
-                <Button text="Save" onAction="#saveCustomClass"></Button>
-                <Button text="Compile" onAction="#compileClasses"></Button>
+                <Button text="Save" fx:id="buttonSave" onAction="#saveCustomClass"></Button>
+                <Button text="Compile" fx:id="buttonCompile" onAction="#compileClasses"></Button>
             </ToolBar>
         </VBox>
     </top>

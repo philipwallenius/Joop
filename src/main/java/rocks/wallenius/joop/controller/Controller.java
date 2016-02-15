@@ -1,10 +1,13 @@
 package rocks.wallenius.joop.controller;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import org.fxmisc.richtext.CodeArea;
 import rocks.wallenius.joop.gui.dialog.NewDialog;
@@ -19,6 +22,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 /**
  *
@@ -26,10 +30,22 @@ import java.util.Optional;
  *
  * Created by philipwallenius on 14/02/16.
  */
-public class Controller {
+public class Controller implements Initializable {
 
     @FXML
     TabPane tabPane;
+
+    @FXML
+    Button buttonSave;
+
+    @FXML
+    Button buttonCompile;
+
+    @FXML
+    MenuItem menuItemSave;
+
+    @FXML
+    MenuItem menuItemCompile;
 
     private Model model;
 
@@ -38,6 +54,35 @@ public class Controller {
      */
     public Controller() {
         model = new Model();
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+        buttonSave.setDisable(true);
+        buttonCompile.setDisable(true);
+        menuItemSave.setDisable(true);
+        menuItemCompile.setDisable(true);
+
+
+        tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
+            @Override
+            public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
+                bindClassChangesToSaveButtons(model.getCustomClassByName(newValue.getText()));
+            }
+        });
+    }
+
+    private void bindClassChangesToSaveButtons(CustomClass c) {
+        buttonSave.setDisable(!c.getChanged());
+        menuItemSave.setDisable(!c.getChanged());
+        c.changedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                buttonSave.setDisable(!newValue);
+                menuItemSave.setDisable(!newValue);
+            }
+        });
     }
 
     /**
@@ -55,7 +100,14 @@ public class Controller {
      */
     @FXML
     protected void saveCustomClass(ActionEvent event) {
-        System.out.println("Clicked Save Button!");
+        Tab tab = tabPane.getSelectionModel().getSelectedItem();
+        CustomClass c = model.getCustomClassByName(tab.getText());
+        try {
+            saveClass(c);
+        } catch (IOException e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Unable to save class");
+        }
     }
 
     /**
@@ -112,16 +164,31 @@ public class Controller {
      */
     private void createNewClass(String className) throws IOException, URISyntaxException {
         CustomClass newCustomClass = new CustomClass();
+
+        // remove .java or any other file extension
+        if(className.contains(".")) {
+            className = className.substring(0, className.indexOf("."));
+        }
+
         newCustomClass.setName(className);
         newCustomClass.setCode(loadClassTemplate(className));
 
         // save new class to file
         saveClass(newCustomClass);
-
         model.addClass(newCustomClass);
         Tab newTab = new Tab(newCustomClass.getName());
-        newTab.setContent(new CodeArea(newCustomClass.getCode()));
+        CodeArea codeArea = new CodeArea(newCustomClass.getCode());
+        codeArea.setOnKeyTyped(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                newCustomClass.setCode(codeArea.getText());
+                newCustomClass.setChanged(true);
+            }
+        });
+        newTab.setContent(codeArea);
         tabPane.getTabs().add(newTab);
+        tabPane.getSelectionModel().select(newTab);
+        bindClassChangesToSaveButtons(newCustomClass);
     }
 
     /**
