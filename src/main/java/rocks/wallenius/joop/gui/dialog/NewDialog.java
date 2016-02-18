@@ -159,9 +159,16 @@ public class NewDialog extends Stage {
     private void okAction() {
         String name = inputName.getText().trim();
 
-        // Validate name input
+        // Validate name has been entered
         if(name.length() == 0) {
             showInvalidInputAlert("Please enter a name for the class.");
+            inputName.requestFocus();
+            return;
+        }
+
+        // Validate name doesn't end with dot
+        if(name.endsWith(".")) {
+            showInvalidInputAlert(DIALOG_INVALID_CLASS_NAME_ERROR);
             inputName.requestFocus();
             return;
         }

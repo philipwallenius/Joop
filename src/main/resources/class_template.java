@@ -1,3 +1,5 @@
+<<PACKAGE>>
+
 public class <<CLASSNAME>> {
 
     // variable declarations

@@ -23,13 +23,15 @@ public class ClassFileUtils {
         return new String(Files.readAllBytes(file.toPath()), Charset.forName("UTF-8"));
     }
 
-    public static boolean exists(String className) {
+    public static boolean exists(String path) {
 
-        if(className.toLowerCase().endsWith(".java")) {
-            className = className.substring(0, className.toLowerCase().lastIndexOf(".java"));
+        if(path.toLowerCase().endsWith(".java")) {
+            path = path.substring(0, path.toLowerCase().lastIndexOf(".java"));
         }
 
-        File file = new File(String.format("usergenerated/%s.java", className));
+        path = path.replace(".", "/");
+
+        File file = new File(String.format("usergenerated/%s.java", path));
         return file.exists();
     }
 

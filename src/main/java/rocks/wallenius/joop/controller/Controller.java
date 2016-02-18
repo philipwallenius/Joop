@@ -23,6 +23,8 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -194,20 +196,30 @@ public class Controller implements Initializable {
     /**
      * Creates a new class and opens a new tab with a CodeArea
      *
-     * @param className to name the new class
+     * @param path of new class
      * @throws IOException
      * @throws URISyntaxException
      */
-    private void createNewClass(String className) throws IOException, URISyntaxException {
+    private void createNewClass(String path) throws IOException, URISyntaxException {
+
         CustomClass newCustomClass = new CustomClass();
 
-        // add .java if user didn't include file extension
-        if (!className.toLowerCase().contains(".java")) {
-            className = className.concat(".java");
+        // remove .java extension if it exists
+        if (path.toLowerCase().endsWith(".java")) {
+            path = path.substring(0, path.lastIndexOf("."));
         }
 
-        newCustomClass.setCode(loadClassTemplate(className.substring(0, className.toLowerCase().lastIndexOf(".java"))));
-        newCustomClass.setPath(new File(String.format("usergenerated/%s", className)).toPath());
+        String filePath = path.replace(".", "/");
+
+        newCustomClass.setPath(new File(String.format("usergenerated/%s.java", filePath)).toPath());
+
+        if(containsPackageDefintions(path)) {
+            String className = newCustomClass.getName().substring(0, newCustomClass.getName().lastIndexOf(".java"));
+            String pckg = path.substring(0, path.lastIndexOf("."));
+            newCustomClass.setCode(loadClassTemplate(className, pckg));
+        } else {
+            newCustomClass.setCode(loadClassTemplate(newCustomClass.getName().substring(0, newCustomClass.getName().lastIndexOf(".java"))));
+        }
 
         // save new class to file
         saveClass(newCustomClass);
@@ -215,6 +227,11 @@ public class Controller implements Initializable {
 
         // create tab
         addClassTab(newCustomClass);
+    }
+
+    private boolean containsPackageDefintions(String className) {
+        Matcher matcher = Pattern.compile("[.]{1}").matcher(className);
+        return matcher.find();
     }
 
     private void openClass(File file) throws IOException {
@@ -257,7 +274,21 @@ public class Controller implements Initializable {
     private String loadClassTemplate(String className) throws IOException, URISyntaxException {
         URL url = this.getClass().getResource("/class_template.java");
         String content = new String(Files.readAllBytes(Paths.get(url.toURI())));
-        return content.replace("<<CLASSNAME>>", className);
+        return content.replace("<<CLASSNAME>>", className).replace("<<PACKAGE>>\n\n", "");
+    }
+
+    /**
+     * Loads the default class code from template and inserts the specific class name and package
+     * @param className to insert into template class code
+     * @param pckg is the package to insert into template class code
+     * @return
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    private String loadClassTemplate(String className, String pckg) throws IOException, URISyntaxException {
+        URL url = this.getClass().getResource("/class_template.java");
+        String content = new String(Files.readAllBytes(Paths.get(url.toURI())));
+        return content.replace("<<CLASSNAME>>", className).replace("<<PACKAGE>>", String.format("package %s;", pckg));
     }
 
     /**
