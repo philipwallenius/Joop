@@ -15,6 +15,7 @@ public class ClassFileUtils {
     private ClassFileUtils() {}
 
     public static void saveClass(CustomClass clazz) throws IOException {
+        Files.createDirectories(clazz.getPath().getParent());
         Files.write(clazz.getPath(), clazz.getCode().getBytes());
     }
 
