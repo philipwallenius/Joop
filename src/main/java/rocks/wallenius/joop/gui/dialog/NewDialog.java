@@ -75,7 +75,7 @@ public class NewDialog extends Stage {
                 cancelled = true;
                 close();
             } else if (ke.getCode() == KeyCode.ENTER) {
-                if(JavaUtil.isValidClassName(inputName.getText().trim())) {
+                if(JavaClassNameUtil.isValidClassName(inputName.getText().trim())) {
                     okAction();
                 }
             }
@@ -106,7 +106,7 @@ public class NewDialog extends Stage {
 
         // Ensure that only numbers are entered into width and height fields
         inputName.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!JavaUtil.isValidClassName(newValue)) {
+            if (!JavaClassNameUtil.isValidClassName(newValue)) {
                 labelError.setVisible(true);
                 buttonOK.setDisable(true);
             } else {

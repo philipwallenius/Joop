@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.fxmisc.richtext.CodeArea;
 import rocks.wallenius.joop.gui.dialog.NewDialog;
@@ -61,7 +62,9 @@ public class Controller implements Initializable {
 
 
         tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            bindClassChangesToSaveButtons(model.getCustomClassByName(newValue.getText()));
+            if(newValue != null) {
+                bindClassChangesToSaveButtons(model.getCustomClassByName(newValue.getText()));
+            }
         });
     }
 
@@ -81,7 +84,19 @@ public class Controller implements Initializable {
      */
     @FXML
     protected void openCustomClass(ActionEvent event) {
-        System.out.println("Clicked Open Button!");
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Class");
+        FileChooser.ExtensionFilter extFilterSvg = new FileChooser.ExtensionFilter("Java files (*.java)", "*.java", "*.JAVA");
+        fileChooser.getExtensionFilters().addAll(extFilterSvg);
+        File file = fileChooser.showOpenDialog(tabPane.getScene().getWindow());
+        if(file != null) {
+            try {
+                openClass(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+                new Alert(Alert.AlertType.ERROR, "Unable to load class");
+            }
+        }
     }
 
     /**
@@ -161,27 +176,49 @@ public class Controller implements Initializable {
     private void createNewClass(String className) throws IOException, URISyntaxException {
         CustomClass newCustomClass = new CustomClass();
 
-        // remove .java or any other file extension
-        if (className.contains(".")) {
-            className = className.substring(0, className.indexOf("."));
+        // add .java if user didn't include file extension
+        if (!className.toLowerCase().contains(".java")) {
+            className = className.concat(".java");
         }
 
-        newCustomClass.setName(className);
-        newCustomClass.setCode(loadClassTemplate(className));
+        newCustomClass.setCode(loadClassTemplate(className.substring(0, className.toLowerCase().lastIndexOf(".java"))));
+        newCustomClass.setPath(new File(String.format("usergenerated/%s", className)).toPath());
 
         // save new class to file
         saveClass(newCustomClass);
         model.addClass(newCustomClass);
-        Tab newTab = new Tab(newCustomClass.getName());
-        CodeArea codeArea = new CodeArea(newCustomClass.getCode());
+
+        // create tab
+        addClassTab(newCustomClass);
+    }
+
+    private void openClass(File file) throws IOException {
+        CustomClass loadedCustomClass;
+
+        String name = file.getName();
+        String code = ClassFileUtils.loadClass(file);
+
+        loadedCustomClass = new CustomClass();
+        loadedCustomClass.setCode(code);
+        loadedCustomClass.setPath(file.toPath());
+
+        model.addClass(loadedCustomClass);
+
+        // create tab
+        addClassTab(loadedCustomClass);
+    }
+
+    private void addClassTab(CustomClass customClass) {
+        Tab newTab = new Tab(customClass.getName());
+        CodeArea codeArea = new CodeArea(customClass.getCode());
         codeArea.setOnKeyTyped(event -> {
-            newCustomClass.setCode(codeArea.getText());
-            newCustomClass.setChanged(true);
+            customClass.setCode(codeArea.getText());
+            customClass.setChanged(true);
         });
         newTab.setContent(codeArea);
         tabPane.getTabs().add(newTab);
         tabPane.getSelectionModel().select(newTab);
-        bindClassChangesToSaveButtons(newCustomClass);
+        bindClassChangesToSaveButtons(customClass);
     }
 
     /**
@@ -205,10 +242,6 @@ public class Controller implements Initializable {
      * @throws IOException
      */
     private void saveClass(CustomClass clazz) throws IOException {
-        if (clazz.getPath() == null) {
-            File file = new File(String.format("usergenerated/%s.java", clazz.getName()));
-            clazz.setPath(Paths.get(file.toURI()));
-        }
         ClassFileUtils.saveClass(clazz);
         clazz.setChanged(false);
     }

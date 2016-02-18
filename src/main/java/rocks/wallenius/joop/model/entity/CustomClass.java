@@ -11,7 +11,6 @@ import java.nio.file.Path;
  */
 public class CustomClass {
 
-    private String name;
     private String code;
     private Path path;
     private BooleanProperty changed;
@@ -21,11 +20,7 @@ public class CustomClass {
     }
 
     public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+        return path.getFileName().toString();
     }
 
     public String getCode() {

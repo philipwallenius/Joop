@@ -1,11 +1,12 @@
 public class <<CLASSNAME>> {
 
-    //variable declarations
+    // variable declarations
 
+    // constructor declarations
     public <<CLASSNAME>>() {
 
     }
 
-    //method declarations
+    // method declarations
 
 }
