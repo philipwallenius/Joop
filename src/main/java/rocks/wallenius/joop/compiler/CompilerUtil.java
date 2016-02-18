@@ -35,7 +35,7 @@ public class CompilerUtil {
             StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null);
             List<String> optionList = new ArrayList<String>();
             optionList.add("-classpath");
-            optionList.add(System.getProperty("java.class.path"));
+            optionList.add(System.getProperty("java.class.path")+";"+ config.getString(CONF_COMPILATION_DIR));
             optionList.add("-d");
             optionList.add(config.getString(CONF_COMPILATION_DIR));
 
