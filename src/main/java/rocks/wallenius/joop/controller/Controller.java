@@ -9,6 +9,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.fxmisc.richtext.CodeArea;
 import rocks.wallenius.joop.compiler.CompilerUtil;
+import rocks.wallenius.joop.configuration.ConfigurationService;
 import rocks.wallenius.joop.gui.dialog.NewDialog;
 import rocks.wallenius.joop.model.Model;
 import rocks.wallenius.joop.model.entity.CustomClass;
@@ -34,6 +35,8 @@ import java.util.stream.Collectors;
  */
 public class Controller implements Initializable {
 
+    private final static String CONF_SOURCES_DIR = "sources.directory";
+
     @FXML
     TabPane tabPane;
 
@@ -51,6 +54,8 @@ public class Controller implements Initializable {
 
     private Model model;
 
+    private static ConfigurationService config;
+
     /**
      * MVC components instantiated from this constructor
      */
@@ -60,6 +65,8 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        config = ConfigurationService.getInstance();
 
         buttonSave.setDisable(true);
         buttonCompile.setDisable(true);
@@ -149,7 +156,12 @@ public class Controller implements Initializable {
         // compile classes
         if(model.getClasses().size() > 0) {
             List<File> fileList = model.getClasses().stream().map(CustomClass::getFile).collect(Collectors.toList());
-            CompilerUtil.compile(fileList.toArray(new File[fileList.size()]));
+            try {
+                CompilerUtil.compile(fileList.toArray(new File[fileList.size()]));
+            } catch (IOException e) {
+                e.printStackTrace();
+                new Alert(Alert.AlertType.ERROR, "Unable to compile classes");
+            }
         }
     }
 
@@ -211,7 +223,7 @@ public class Controller implements Initializable {
 
         String filePath = path.replace(".", "/");
 
-        newCustomClass.setPath(new File(String.format("usergenerated/%s.java", filePath)).toPath());
+        newCustomClass.setPath(new File(String.format("%s%s.java", config.getString(CONF_SOURCES_DIR), filePath)).toPath());
 
         if(containsPackageDefintions(path)) {
             String className = newCustomClass.getName().substring(0, newCustomClass.getName().lastIndexOf(".java"));

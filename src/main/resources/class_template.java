@@ -1,6 +1,6 @@
 <<PACKAGE>>
 
-public class <<CLASSNAME>> {
+public class <<CLASSNAME>>{
 
     // variable declarations
 

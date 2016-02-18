@@ -1,8 +1,11 @@
 package rocks.wallenius.joop.compiler;
 
+import rocks.wallenius.joop.configuration.ConfigurationService;
+
 import javax.tools.*;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,7 +15,20 @@ import java.util.List;
  */
 public class CompilerUtil {
 
-    public static void compile(File[] files) {
+    private final static String CONF_COMPILATION_DIR = "compilation.directory";
+
+    private static ConfigurationService config;
+
+    static {
+        config = ConfigurationService.getInstance();
+    }
+
+    private CompilerUtil() {}
+
+    public static void compile(File[] files) throws IOException {
+
+        Files.createDirectories(new File(config.getString(CONF_COMPILATION_DIR)).toPath());
+
         try {
             DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
             JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
@@ -20,6 +36,8 @@ public class CompilerUtil {
             List<String> optionList = new ArrayList<String>();
             optionList.add("-classpath");
             optionList.add(System.getProperty("java.class.path"));
+            optionList.add("-d");
+            optionList.add(config.getString(CONF_COMPILATION_DIR));
 
             Iterable<? extends JavaFileObject> compilationUnit = fileManager.getJavaFileObjectsFromFiles(Arrays.asList(files));
             JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, diagnostics, optionList, null, compilationUnit);

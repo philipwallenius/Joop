@@ -1,5 +1,6 @@
 package rocks.wallenius.joop.util;
 
+import rocks.wallenius.joop.configuration.ConfigurationService;
 import rocks.wallenius.joop.model.entity.CustomClass;
 
 import java.io.File;
@@ -11,6 +12,14 @@ import java.nio.file.Files;
  * Created by philipwallenius on 15/02/16.
  */
 public class ClassFileUtils {
+
+    private final static String CONF_SOURCES_DIR = "sources.directory";
+
+    private static ConfigurationService config;
+
+    static {
+        config = ConfigurationService.getInstance();
+    }
 
     private ClassFileUtils() {}
 
@@ -31,7 +40,7 @@ public class ClassFileUtils {
 
         path = path.replace(".", "/");
 
-        File file = new File(String.format("usergenerated/%s.java", path));
+        File file = new File(String.format("%s%s.java", config.getString(CONF_SOURCES_DIR), path));
         return file.exists();
     }
 
