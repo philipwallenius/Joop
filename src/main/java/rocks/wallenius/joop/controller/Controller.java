@@ -1,5 +1,6 @@
 package rocks.wallenius.joop.controller;
 
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -60,14 +61,31 @@ public class Controller implements Initializable {
         menuItemSave.setDisable(true);
         menuItemCompile.setDisable(true);
 
-
+        // listen to when user changes tabs in the editor, bind the current selected tab and class to the save button
         tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue != null) {
                 bindClassChangesToSaveButtons(model.getCustomClassByName(newValue.getText()));
             }
         });
+
+        // enable/disable Compile-button depending on if there are open tabs
+        tabPane.getTabs().addListener(new ListChangeListener<Tab>() {
+            @Override
+            public void onChanged(Change<? extends Tab> c) {
+                if(tabPane.getTabs().size() > 0) {
+                    buttonCompile.setDisable(false);
+                } else {
+                    buttonCompile.setDisable(true);
+                }
+            }
+        });
+
     }
 
+    /**
+     * Binds the Save button and enables/disables it according to the changed-flag in the CustomClass for each class in each tab.
+     * @param c class to listen for changes in
+     */
     private void bindClassChangesToSaveButtons(CustomClass c) {
         buttonSave.setDisable(!c.getChanged());
         menuItemSave.setDisable(!c.getChanged());
