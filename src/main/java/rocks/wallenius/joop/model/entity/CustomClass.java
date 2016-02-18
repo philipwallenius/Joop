@@ -4,6 +4,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import org.fxmisc.richtext.CodeArea;
 
+import java.io.File;
 import java.nio.file.Path;
 
 /**
@@ -21,6 +22,10 @@ public class CustomClass {
 
     public String getName() {
         return path.getFileName().toString();
+    }
+
+    public File getFile() {
+        return path.toFile();
     }
 
     public String getCode() {

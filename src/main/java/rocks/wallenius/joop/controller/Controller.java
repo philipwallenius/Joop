@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.fxmisc.richtext.CodeArea;
+import rocks.wallenius.joop.compiler.CompilerUtil;
 import rocks.wallenius.joop.gui.dialog.NewDialog;
 import rocks.wallenius.joop.model.Model;
 import rocks.wallenius.joop.model.entity.CustomClass;
@@ -19,8 +20,10 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 /**
  * MVC Controller
@@ -141,7 +144,11 @@ public class Controller implements Initializable {
      */
     @FXML
     protected void compileClasses(ActionEvent event) {
-//        performSaveChecks();
+        // compile classes
+        if(model.getClasses().size() > 0) {
+            List<File> fileList = model.getClasses().stream().map(CustomClass::getFile).collect(Collectors.toList());
+            CompilerUtil.compile(fileList.toArray(new File[fileList.size()]));
+        }
     }
 
     /**
