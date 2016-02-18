@@ -81,14 +81,13 @@ public class Controller implements Initializable {
         });
 
         // enable/disable Compile-button depending on if there are open tabs
-        tabPane.getTabs().addListener(new ListChangeListener<Tab>() {
-            @Override
-            public void onChanged(Change<? extends Tab> c) {
-                if(tabPane.getTabs().size() > 0) {
-                    buttonCompile.setDisable(false);
-                } else {
-                    buttonCompile.setDisable(true);
-                }
+        tabPane.getTabs().addListener((ListChangeListener<Tab>) c -> {
+
+
+            if(tabPane.getTabs().size() > 0) {
+                buttonCompile.setDisable(false);
+            } else {
+                buttonCompile.setDisable(true);
             }
         });
 
@@ -270,6 +269,7 @@ public class Controller implements Initializable {
             customClass.setChanged(true);
         });
         newTab.setContent(codeArea);
+        newTab.setOnClosed(event -> model.removeClass(customClass));
         tabPane.getTabs().add(newTab);
         tabPane.getSelectionModel().select(newTab);
         bindClassChangesToSaveButtons(customClass);
