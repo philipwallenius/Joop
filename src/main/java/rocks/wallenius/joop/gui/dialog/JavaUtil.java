@@ -29,11 +29,8 @@ public class JavaUtil {
 
     public static boolean isValidClassName(String text) {
         if(text.length() > 0) {
-            for (String part : text.split("\\.")) {
-                if (JAVA_KEYWORDS.contains(part.toLowerCase()) ||
-                        !JAVA_CLASS_NAME_REGEX.matcher(part).matches()) {
-                    return false;
-                }
+            if (JAVA_KEYWORDS.contains(text.toLowerCase()) || !JAVA_CLASS_NAME_REGEX.matcher(text).matches()) {
+                return false;
             }
         }
         return true;

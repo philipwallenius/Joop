@@ -1,6 +1,3 @@
-<?import rocks.wallenius.joop.gui.CodeView?>
-<?import rocks.wallenius.joop.gui.ClassView?>
-<?import rocks.wallenius.joop.gui.ObjectView?>
 <?import javafx.scene.control.SplitPane?>
 
 <!-- Main Window -->
@@ -13,26 +10,27 @@
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.StatusBar?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.StackPane?>
 <BorderPane fx:id="borderPane" fx:controller="rocks.wallenius.joop.controller.Controller" xmlns:fx="http://javafx.com/fxml">
     <top>
         <VBox>
             <MenuBar>
                 <Menu text="File">
-                    <MenuItem text="New" onAction="#newCustomClass"></MenuItem>
-                    <MenuItem text="Open" onAction="#openCustomClass"></MenuItem>
-                    <MenuItem text="Save" fx:id="menuItemSave" onAction="#saveCustomClass"></MenuItem>
-                    <MenuItem text="Compile" fx:id="menuItemCompile" onAction="#compileClasses"></MenuItem>
-                    <MenuItem text="Exit" onAction="#exitApplication"></MenuItem>
+                    <MenuItem text="New" onAction="#newCustomClass"/>
+                    <MenuItem text="Open" onAction="#openCustomClass"/>
+                    <MenuItem text="Save" fx:id="menuItemSave" onAction="#saveCustomClass"/>
+                    <MenuItem text="Compile" fx:id="menuItemCompile" onAction="#compileClasses"/>
+                    <MenuItem text="Exit" onAction="#exitApplication"/>
                 </Menu>
                 <Menu text="Help">
-                    <MenuItem text="About"></MenuItem>
+                    <MenuItem text="About" />
                 </Menu>
             </MenuBar>
             <ToolBar>
-                <Button text="New" onAction="#newCustomClass"></Button>
-                <Button text="Open" onAction="#openCustomClass"></Button>
-                <Button text="Save" fx:id="buttonSave" onAction="#saveCustomClass"></Button>
-                <Button text="Compile" fx:id="buttonCompile" onAction="#compileClasses"></Button>
+                <Button text="New" onAction="#newCustomClass" />
+                <Button text="Open" onAction="#openCustomClass" />
+                <Button text="Save" fx:id="buttonSave" onAction="#saveCustomClass" />
+                <Button text="Compile" fx:id="buttonCompile" onAction="#compileClasses" />
             </ToolBar>
         </VBox>
     </top>
@@ -41,12 +39,12 @@
             <TabPane fx:id="tabPane">
             </TabPane>
             <SplitPane orientation="VERTICAL">
-                <ClassView styleClass="class-view" />
-                <ObjectView styleClass="object-view" />
+                <StackPane styleClass="class-view" />
+                <StackPane styleClass="object-view" />
             </SplitPane>
         </SplitPane>
     </center>
     <bottom>
-        <StatusBar></StatusBar>
+        <StatusBar/>
     </bottom>
 </BorderPane>

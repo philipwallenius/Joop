@@ -1,13 +1,9 @@
 package rocks.wallenius.joop.controller;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import org.fxmisc.richtext.CodeArea;
 import rocks.wallenius.joop.gui.dialog.NewDialog;
@@ -25,9 +21,8 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
- *
  * MVC Controller
- *
+ * <p>
  * Created by philipwallenius on 14/02/16.
  */
 public class Controller implements Initializable {
@@ -65,28 +60,23 @@ public class Controller implements Initializable {
         menuItemCompile.setDisable(true);
 
 
-        tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
-            @Override
-            public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
-                bindClassChangesToSaveButtons(model.getCustomClassByName(newValue.getText()));
-            }
+        tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            bindClassChangesToSaveButtons(model.getCustomClassByName(newValue.getText()));
         });
     }
 
     private void bindClassChangesToSaveButtons(CustomClass c) {
         buttonSave.setDisable(!c.getChanged());
         menuItemSave.setDisable(!c.getChanged());
-        c.changedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                buttonSave.setDisable(!newValue);
-                menuItemSave.setDisable(!newValue);
-            }
+        c.changedProperty().addListener((observable, oldValue, newValue) -> {
+            buttonSave.setDisable(!newValue);
+            menuItemSave.setDisable(!newValue);
         });
     }
 
     /**
      * Handler for open custom class events
+     *
      * @param event
      */
     @FXML
@@ -96,6 +86,7 @@ public class Controller implements Initializable {
 
     /**
      * Handler for save custom class events
+     *
      * @param event
      */
     @FXML
@@ -112,6 +103,7 @@ public class Controller implements Initializable {
 
     /**
      * Handler for compile custom class events
+     *
      * @param event
      */
     @FXML
@@ -121,6 +113,7 @@ public class Controller implements Initializable {
 
     /**
      * Handler for application exit
+     *
      * @param event
      */
     @FXML
@@ -130,6 +123,7 @@ public class Controller implements Initializable {
 
     /**
      * Handler for new custom class events
+     *
      * @param event
      */
     @FXML
@@ -137,10 +131,10 @@ public class Controller implements Initializable {
 
         Optional<String> className = promptClassName();
 
-        if(className.isPresent()) {
+        if (className.isPresent()) {
             try {
                 createNewClass(className.get());
-            } catch(IOException | URISyntaxException exception) {
+            } catch (IOException | URISyntaxException exception) {
                 exception.printStackTrace();
                 new Alert(Alert.AlertType.ERROR, "Unable to create new class");
             }
@@ -149,15 +143,17 @@ public class Controller implements Initializable {
 
     /**
      * Creates a popup requesting for a class name for the new class to be created
+     *
      * @return Returns an Optional with the class name as a String
      */
     private Optional<String> promptClassName() {
-        NewDialog newDialog = new NewDialog((Stage)tabPane.getScene().getWindow());
+        NewDialog newDialog = new NewDialog((Stage) tabPane.getScene().getWindow());
         return newDialog.getValue();
     }
 
     /**
      * Creates a new class and opens a new tab with a CodeArea
+     *
      * @param className to name the new class
      * @throws IOException
      * @throws URISyntaxException
@@ -166,7 +162,7 @@ public class Controller implements Initializable {
         CustomClass newCustomClass = new CustomClass();
 
         // remove .java or any other file extension
-        if(className.contains(".")) {
+        if (className.contains(".")) {
             className = className.substring(0, className.indexOf("."));
         }
 
@@ -178,12 +174,9 @@ public class Controller implements Initializable {
         model.addClass(newCustomClass);
         Tab newTab = new Tab(newCustomClass.getName());
         CodeArea codeArea = new CodeArea(newCustomClass.getCode());
-        codeArea.setOnKeyTyped(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                newCustomClass.setCode(codeArea.getText());
-                newCustomClass.setChanged(true);
-            }
+        codeArea.setOnKeyTyped(event -> {
+            newCustomClass.setCode(codeArea.getText());
+            newCustomClass.setChanged(true);
         });
         newTab.setContent(codeArea);
         tabPane.getTabs().add(newTab);
@@ -193,6 +186,7 @@ public class Controller implements Initializable {
 
     /**
      * Loads the default class code from template and inserts the specific class name
+     *
      * @param className to insert into template class code
      * @return Returns template class code with passed class name
      * @throws IOException
@@ -206,11 +200,12 @@ public class Controller implements Initializable {
 
     /**
      * Saves a class to file
+     *
      * @param clazz to save to file
      * @throws IOException
      */
     private void saveClass(CustomClass clazz) throws IOException {
-        if(clazz.getPath() == null) {
+        if (clazz.getPath() == null) {
             File file = new File(String.format("usergenerated/%s.java", clazz.getName()));
             clazz.setPath(Paths.get(file.toURI()));
         }

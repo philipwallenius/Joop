@@ -1,8 +1,5 @@
 package rocks.wallenius.joop.gui.dialog;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -11,8 +8,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -71,12 +70,12 @@ public class NewDialog extends Stage {
         vbox.getChildren().addAll(gridInputs, gridError, gridButtons);
 
         Scene scene = new Scene(vbox);
-        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            public void handle(javafx.scene.input.KeyEvent ke) {
-                if (ke.getCode() == KeyCode.ESCAPE) {
-                    cancelled = true;
-                    close();
-                } else if (ke.getCode() == KeyCode.ENTER) {
+        scene.setOnKeyPressed(ke -> {
+            if (ke.getCode() == KeyCode.ESCAPE) {
+                cancelled = true;
+                close();
+            } else if (ke.getCode() == KeyCode.ENTER) {
+                if(JavaUtil.isValidClassName(inputName.getText().trim())) {
                     okAction();
                 }
             }
@@ -106,15 +105,13 @@ public class NewDialog extends Stage {
         inputName = new TextField(DEFAULT_CLASS_NAME);
 
         // Ensure that only numbers are entered into width and height fields
-        inputName.textProperty().addListener(new ChangeListener<String>() {
-            @Override public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (!JavaUtil.isValidClassName(newValue)) {
-                    labelError.setVisible(true);
-                    buttonOK.setDisable(true);
-                } else {
-                    labelError.setVisible(false);
-                    buttonOK.setDisable(false);
-                }
+        inputName.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!JavaUtil.isValidClassName(newValue)) {
+                labelError.setVisible(true);
+                buttonOK.setDisable(true);
+            } else {
+                labelError.setVisible(false);
+                buttonOK.setDisable(false);
             }
         });
 
