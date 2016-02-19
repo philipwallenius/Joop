@@ -12,11 +12,12 @@ import java.nio.file.Path;
  */
 public class CustomClass {
 
-    private String code;
+    private CodeArea codeArea;
     private Path path;
     private BooleanProperty changed;
 
     public CustomClass() {
+        codeArea = new CodeArea();
         changed = new SimpleBooleanProperty(false);
     }
 
@@ -24,16 +25,25 @@ public class CustomClass {
         return path.getFileName().toString();
     }
 
-    public File getFile() {
-        return path.toFile();
+    public CodeArea getCodeArea() {
+        return codeArea;
+    }
+
+    public void setCodeArea(CodeArea codeArea) {
+        this.codeArea = codeArea;
     }
 
     public String getCode() {
-        return code;
+        return codeArea.getText();
     }
 
     public void setCode(String code) {
-        this.code = code;
+        codeArea.clear();
+        codeArea.appendText(code);
+    }
+
+    public File getFile() {
+        return path.toFile();
     }
 
     public Path getPath() {

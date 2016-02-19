@@ -25,7 +25,7 @@ public class ClassFileUtils {
 
     public static void saveClass(CustomClass clazz) throws IOException {
         Files.createDirectories(clazz.getPath().getParent());
-        Files.write(clazz.getPath(), clazz.getCode().getBytes());
+        Files.write(clazz.getPath(), clazz.getCode().getBytes("UTF-8"));
     }
 
     public static String loadClass(File file) throws IOException {

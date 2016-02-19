@@ -7,7 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.fxmisc.richtext.CodeArea;
+import org.controlsfx.control.StatusBar;
 import rocks.wallenius.joop.compiler.CompilerUtil;
 import rocks.wallenius.joop.configuration.ConfigurationService;
 import rocks.wallenius.joop.gui.dialog.NewDialog;
@@ -51,6 +51,9 @@ public class Controller implements Initializable {
 
     @FXML
     MenuItem menuItemCompile;
+
+    @FXML
+    StatusBar statusBar;
 
     private Model model;
 
@@ -152,6 +155,9 @@ public class Controller implements Initializable {
      */
     @FXML
     protected void compileClasses(ActionEvent event) {
+
+        statusBar.setText("Compiling...");
+
         // compile classes
         if(model.getClasses().size() > 0) {
             List<File> fileList = model.getClasses().stream().map(CustomClass::getFile).collect(Collectors.toList());
@@ -162,6 +168,8 @@ public class Controller implements Initializable {
                 new Alert(Alert.AlertType.ERROR, "Unable to compile classes");
             }
         }
+
+        statusBar.setText("Compilation completed successfully");
     }
 
     /**
@@ -248,7 +256,6 @@ public class Controller implements Initializable {
     private void openClass(File file) throws IOException {
         CustomClass loadedCustomClass;
 
-        String name = file.getName();
         String code = ClassFileUtils.loadClass(file);
 
         loadedCustomClass = new CustomClass();
@@ -263,12 +270,10 @@ public class Controller implements Initializable {
 
     private void addClassTab(CustomClass customClass) {
         Tab newTab = new Tab(customClass.getName());
-        CodeArea codeArea = new CodeArea(customClass.getCode());
-        codeArea.setOnKeyTyped(event -> {
-            customClass.setCode(codeArea.getText());
+        customClass.getCodeArea().setOnKeyPressed(event -> {
             customClass.setChanged(true);
         });
-        newTab.setContent(codeArea);
+        newTab.setContent(customClass.getCodeArea());
         newTab.setOnClosed(event -> model.removeClass(customClass));
         tabPane.getTabs().add(newTab);
         tabPane.getSelectionModel().select(newTab);

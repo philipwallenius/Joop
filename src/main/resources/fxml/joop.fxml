@@ -45,6 +45,6 @@
         </SplitPane>
     </center>
     <bottom>
-        <StatusBar/>
+        <StatusBar fx:id="statusBar"/>
     </bottom>
 </BorderPane>
