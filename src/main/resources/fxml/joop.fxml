@@ -1,6 +1,5 @@
+<!-- MVC View -->
 <?import javafx.scene.control.SplitPane?>
-
-<!-- Main Window -->
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.Button?>

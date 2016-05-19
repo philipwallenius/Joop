@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.controlsfx.control.StatusBar;
+import rocks.wallenius.joop.compiler.CompilationException;
 import rocks.wallenius.joop.compiler.CompilerUtil;
 import rocks.wallenius.joop.configuration.ConfigurationService;
 import rocks.wallenius.joop.gui.dialog.NewDialog;
@@ -30,12 +31,12 @@ import java.util.stream.Collectors;
 
 /**
  * MVC Controller
- * <p>
+ *
  * Created by philipwallenius on 14/02/16.
  */
 public class Controller implements Initializable {
 
-    private final static String CONF_SOURCES_DIR = "sources.directory";
+    private final static String CONF_KEY_SOURCES_DIR = "sources.directory";
 
     @FXML
     TabPane tabPane;
@@ -83,10 +84,8 @@ public class Controller implements Initializable {
             }
         });
 
-        // enable/disable Compile-button depending on if there are open tabs
+        // enable/disable Compile-button depending on if there are open tabs in the view
         tabPane.getTabs().addListener((ListChangeListener<Tab>) c -> {
-
-
             if(tabPane.getTabs().size() > 0) {
                 buttonCompile.setDisable(false);
             } else {
@@ -110,7 +109,7 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Handler for open custom class events
+     * Handler for open CustomClass events
      *
      * @param event
      */
@@ -126,13 +125,13 @@ public class Controller implements Initializable {
                 openClass(file);
             } catch (IOException e) {
                 e.printStackTrace();
-                new Alert(Alert.AlertType.ERROR, "Unable to load class");
+                new Alert(Alert.AlertType.ERROR, "Unable to load class").showAndWait();
             }
         }
     }
 
     /**
-     * Handler for save custom class events
+     * Handler for save CustomClass events
      *
      * @param event
      */
@@ -144,12 +143,12 @@ public class Controller implements Initializable {
             saveClass(c);
         } catch (IOException e) {
             e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "Unable to save class");
+            new Alert(Alert.AlertType.ERROR, "Unable to save class").showAndWait();
         }
     }
 
     /**
-     * Handler for compile custom class events
+     * Handler for compile CustomClass events
      *
      * @param event
      */
@@ -158,18 +157,33 @@ public class Controller implements Initializable {
 
         statusBar.setText("Compiling...");
 
-        // compile classes
+        // compile all open classes
         if(model.getClasses().size() > 0) {
+
             List<File> fileList = model.getClasses().stream().map(CustomClass::getFile).collect(Collectors.toList());
+
             try {
+
                 CompilerUtil.compile(fileList.toArray(new File[fileList.size()]));
-            } catch (IOException e) {
-                e.printStackTrace();
-                new Alert(Alert.AlertType.ERROR, "Unable to compile classes");
+
+            } catch (CompilationException compilationException) {
+
+                compilationException.printStackTrace();
+                new Alert(Alert.AlertType.ERROR, compilationException.getCompilationExceptionMessage()).showAndWait();
+                statusBar.setText("Unable to compile classes");
+
+            } catch (IOException ioException) {
+
+                ioException.printStackTrace();
+                new Alert(Alert.AlertType.ERROR, "Unable to compile classes").showAndWait();
+                statusBar.setText("Unable to compile classes");
+
             }
+
         }
 
         statusBar.setText("Compilation completed successfully");
+
     }
 
     /**
@@ -183,13 +197,12 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Handler for new custom class events
+     * Handler for new CustomClass events
      *
      * @param event
      */
     @FXML
     protected void newCustomClass(ActionEvent event) {
-
         Optional<String> className = promptClassName();
 
         if (className.isPresent()) {
@@ -197,7 +210,7 @@ public class Controller implements Initializable {
                 createNewClass(className.get());
             } catch (IOException | URISyntaxException exception) {
                 exception.printStackTrace();
-                new Alert(Alert.AlertType.ERROR, "Unable to create new class");
+                new Alert(Alert.AlertType.ERROR, "Unable to create new class").showAndWait();
             }
         }
     }
@@ -230,7 +243,7 @@ public class Controller implements Initializable {
 
         String filePath = path.replace(".", "/");
 
-        newCustomClass.setPath(new File(String.format("%s%s.java", config.getString(CONF_SOURCES_DIR), filePath)).toPath());
+        newCustomClass.setPath(new File(String.format("%s%s.java", config.getString(CONF_KEY_SOURCES_DIR), filePath)).toPath());
 
         if(containsPackageDefintions(path)) {
             String className = newCustomClass.getName().substring(0, newCustomClass.getName().lastIndexOf(".java"));
@@ -248,11 +261,21 @@ public class Controller implements Initializable {
         addClassTab(newCustomClass);
     }
 
+    /**
+     * Checks if fully qualified classname String contains package defintions
+     * @param className fully qualified classname
+     * @return Returns true or false
+     */
     private boolean containsPackageDefintions(String className) {
         Matcher matcher = Pattern.compile("[.]{1}").matcher(className);
         return matcher.find();
     }
 
+    /**
+     * Opens a new class from given file
+     * @param file of the class
+     * @throws IOException
+     */
     private void openClass(File file) throws IOException {
         CustomClass loadedCustomClass;
 
@@ -268,6 +291,10 @@ public class Controller implements Initializable {
         addClassTab(loadedCustomClass);
     }
 
+    /**
+     * Creates a new tab in the view for a class
+     * @param customClass to create tab for
+     */
     private void addClassTab(CustomClass customClass) {
         Tab newTab = new Tab(customClass.getName());
         customClass.getCodeArea().setOnKeyPressed(event -> {
@@ -281,7 +308,7 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Loads the default class code from template and inserts the specific class name
+     * Loads the default class code from a template and inserts the specific class name
      *
      * @param className to insert into template class code
      * @return Returns template class code with passed class name

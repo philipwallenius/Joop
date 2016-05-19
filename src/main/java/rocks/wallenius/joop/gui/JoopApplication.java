@@ -7,6 +7,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
+ *
+ * Main Class
+ *
  * Created by philipwallenius on 12/02/16.
  */
 public class JoopApplication extends Application {

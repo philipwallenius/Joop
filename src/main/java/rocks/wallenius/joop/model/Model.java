@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * MVC Model
+ *
  * Created by philipwallenius on 14/02/16.
  */
 public class Model {
