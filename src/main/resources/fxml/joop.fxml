@@ -59,14 +59,7 @@
                         </graphic>
                     </Button>
                 </ToolBar>
-                <TextArea fx:id="consoleTextarea" editable="false">
-                    Some weird and scary stack trace here! Some weird and scary stack trace here! Some weird
-                    and scary stack trace here! Some weird and scary stack trace here! Some weird and scary
-                    stack trace here! Some weird and scary stack trace here! Some weird and scary stack
-                    trace here! Some weird and scary stack trace here! Some weird and scary stack trace
-                    here! Some weird and scary stack trace here! Some weird and scary stack trace here! Some
-                    weird and scary stack trace here! Some weird and scary stack trace here!
-                </TextArea>
+                <TextArea fx:id="consoleTextarea" editable="false" />
             </VBox>
             <StatusBar fx:id="statusBar"/>
         </VBox>

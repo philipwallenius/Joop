@@ -170,9 +170,7 @@ public class Controller implements Initializable {
                 CompilerUtil.compile(fileList.toArray(new File[fileList.size()]));
 
             } catch (CompilationException compilationException) {
-
-                compilationException.printStackTrace();
-                new Alert(Alert.AlertType.ERROR, compilationException.getCompilationExceptionMessage()).showAndWait();
+                consoleTextarea.setText(compilationException.getCompilationExceptionMessage());
                 statusBar.setText("Unable to compile classes");
 
             } catch (IOException ioException) {
