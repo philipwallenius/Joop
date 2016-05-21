@@ -1,5 +1,7 @@
 package rocks.wallenius.joop.controller;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -55,6 +57,9 @@ public class Controller implements Initializable {
     MenuItem menuItemCompile;
 
     @FXML
+    CheckMenuItem menuItemConsole;
+
+    @FXML
     StatusBar statusBar;
 
     @FXML
@@ -96,12 +101,24 @@ public class Controller implements Initializable {
 
         // enable/disable Compile-button depending on if there are open tabs in the view
         tabPane.getTabs().addListener((ListChangeListener<Tab>) c -> {
-            if(tabPane.getTabs().size() > 0) {
+            if (tabPane.getTabs().size() > 0) {
                 buttonCompile.setDisable(false);
             } else {
                 buttonCompile.setDisable(true);
             }
         });
+
+        // toggle console window depending on View menu Console item
+        menuItemConsole.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                consoleAndStatusBarContainer.getChildren().add(0, console);
+            } else {
+                consoleAndStatusBarContainer.getChildren().remove(console);
+            }
+        });
+
+        // intialize program with closed console
+        consoleAndStatusBarContainer.getChildren().remove(console);
 
     }
 
@@ -159,15 +176,15 @@ public class Controller implements Initializable {
 
     @FXML
     protected void closeConsole() {
-        consoleAndStatusBarContainer.getChildren().remove(console);
+        menuItemConsole.setSelected(false);
     }
 
     @FXML
     protected void openConsole() {
-        if(!consoleAndStatusBarContainer.getChildren().contains(console)) {
-            consoleAndStatusBarContainer.getChildren().add(0, console);
-        }
+        menuItemConsole.setSelected(true);
     }
+
+
 
     /**
      * Handler for compile CustomClass events

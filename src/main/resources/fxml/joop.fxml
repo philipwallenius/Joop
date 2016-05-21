@@ -18,7 +18,7 @@
                     <MenuItem text="Exit" onAction="#exitApplication"/>
                 </Menu>
                 <Menu text="View">
-                    <MenuItem text="Console" onAction="#openConsole" />
+                    <CheckMenuItem text="Console" fx:id="menuItemConsole" />
                 </Menu>
                 <Menu text="Help">
                     <MenuItem text="About"/>
