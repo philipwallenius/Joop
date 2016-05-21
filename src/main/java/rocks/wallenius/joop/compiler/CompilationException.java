@@ -3,6 +3,7 @@ package rocks.wallenius.joop.compiler;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by jpaw on 19/05/2016.
@@ -19,7 +20,7 @@ public class CompilationException extends Exception {
     public String getCompilationExceptionMessage() {
         StringBuilder sb = new StringBuilder();
         for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics) {
-            sb.append(String.format("Error on line %d in %s%n", diagnostic.getLineNumber(), diagnostic.getSource().toUri())).append("\n");
+            sb.append(String.format("Error on line %s in %s.\n%s", diagnostic.getLineNumber(), diagnostic.getSource().toUri(), diagnostic.getMessage(Locale.ENGLISH))).append("\n");
         }
         return sb.toString();
     }

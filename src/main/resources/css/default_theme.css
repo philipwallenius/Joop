@@ -7,3 +7,28 @@
 .object-view {
 
 }
+
+.console TextArea {
+    -fx-font-family: monospace;
+
+    -fx-background-insets: 0;
+    -fx-background-color: transparent, white, transparent, white;
+}
+
+.console TextArea .content {
+    -fx-background-color: transparent, white, transparent, white;
+}
+
+.console TextArea:focused .content {
+    -fx-background-color: transparent, white, transparent, white;
+}
+
+.console TextArea:focused {
+    -fx-highlight-fill: #7ecfff;
+}
+
+.console TextArea .content {
+    -fx-padding: 0px;
+    -fx-text-fill: gray;
+    -fx-highlight-fill: #7ecfff;
+}

@@ -1,16 +1,13 @@
 <!-- MVC View -->
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.control.ToolBar?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.StatusBar?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.layout.StackPane?>
-<BorderPane fx:id="borderPane" fx:controller="rocks.wallenius.joop.controller.Controller" xmlns:fx="http://javafx.com/fxml">
+<?import javafx.scene.text.TextFlow?>
+<?import javafx.scene.text.Text?>
+<BorderPane fx:id="borderPane" fx:controller="rocks.wallenius.joop.controller.Controller"
+            xmlns:fx="http://javafx.com/fxml">
     <top>
         <VBox>
             <MenuBar>
@@ -22,14 +19,14 @@
                     <MenuItem text="Exit" onAction="#exitApplication"/>
                 </Menu>
                 <Menu text="Help">
-                    <MenuItem text="About" />
+                    <MenuItem text="About"/>
                 </Menu>
             </MenuBar>
             <ToolBar>
-                <Button text="New" onAction="#newCustomClass" />
-                <Button text="Open" onAction="#openCustomClass" />
-                <Button text="Save" fx:id="buttonSave" onAction="#saveCustomClass" />
-                <Button text="Compile" fx:id="buttonCompile" onAction="#compileClasses" />
+                <Button text="New" onAction="#newCustomClass"/>
+                <Button text="Open" onAction="#openCustomClass"/>
+                <Button text="Save" fx:id="buttonSave" onAction="#saveCustomClass"/>
+                <Button text="Compile" fx:id="buttonCompile" onAction="#compileClasses"/>
             </ToolBar>
         </VBox>
     </top>
@@ -38,12 +35,40 @@
             <TabPane fx:id="tabPane">
             </TabPane>
             <SplitPane orientation="VERTICAL">
-                <StackPane styleClass="class-view" />
-                <StackPane styleClass="object-view" />
+                <StackPane styleClass="class-view"/>
+                <StackPane styleClass="object-view"/>
             </SplitPane>
         </SplitPane>
     </center>
     <bottom>
-        <StatusBar fx:id="statusBar"/>
+        <VBox>
+            <VBox styleClass="console" fx:id="console">
+                <ToolBar>
+                    <!--<Button>-->
+                    <!--<graphic>-->
+                    <!--<ImageView>-->
+                    <!--<Image url="@/icons/cross.png"/>-->
+                    <!--</ImageView>-->
+                    <!--</graphic>-->
+                    <!--</Button>-->
+                    <Button>
+                        <graphic>
+                            <ImageView>
+                                <Image url="@/icons/cross.png"/>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+                </ToolBar>
+                <TextArea fx:id="consoleTextarea" editable="false">
+                    Some weird and scary stack trace here! Some weird and scary stack trace here! Some weird
+                    and scary stack trace here! Some weird and scary stack trace here! Some weird and scary
+                    stack trace here! Some weird and scary stack trace here! Some weird and scary stack
+                    trace here! Some weird and scary stack trace here! Some weird and scary stack trace
+                    here! Some weird and scary stack trace here! Some weird and scary stack trace here! Some
+                    weird and scary stack trace here! Some weird and scary stack trace here!
+                </TextArea>
+            </VBox>
+            <StatusBar fx:id="statusBar"/>
+        </VBox>
     </bottom>
 </BorderPane>

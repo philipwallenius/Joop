@@ -56,6 +56,9 @@ public class Controller implements Initializable {
     @FXML
     StatusBar statusBar;
 
+    @FXML
+    TextArea consoleTextarea;
+
     private Model model;
 
     private static ConfigurationService config;
