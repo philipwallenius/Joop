@@ -17,27 +17,31 @@
     -fx-background-color: transparent, transparent, transparent, transparent;
 }
 
-.console TextArea {
+.console StyleClassedTextArea {
     -fx-font-family: monospace;
 
     -fx-background-insets: 0;
     -fx-background-color: transparent, white, transparent, white;
 }
 
-.console TextArea .content {
+.console StyleClassedTextArea .content {
     -fx-background-color: transparent, white, transparent, white;
 }
 
-.console TextArea:focused .content {
+.console StyleClassedTextArea:focused .content {
     -fx-background-color: transparent, white, transparent, white;
 }
 
-.console TextArea:focused {
+.console StyleClassedTextArea:focused {
     -fx-highlight-fill: #7ecfff;
 }
 
-.console TextArea .content {
+.console StyleClassedTextArea .content {
     -fx-padding: 0px;
     -fx-text-fill: gray;
     -fx-highlight-fill: #7ecfff;
+}
+
+.exceptionText {
+    -fx-fill: #AA0202;
 }

@@ -1,7 +1,5 @@
 package rocks.wallenius.joop.controller;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,6 +9,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.controlsfx.control.StatusBar;
+import org.fxmisc.richtext.StyleClassedTextArea;
 import rocks.wallenius.joop.compiler.CompilationException;
 import rocks.wallenius.joop.compiler.CompilerUtil;
 import rocks.wallenius.joop.configuration.ConfigurationService;
@@ -34,7 +33,7 @@ import java.util.stream.Collectors;
 
 /**
  * MVC Controller
- *
+ * <p>
  * Created by philipwallenius on 14/02/16.
  */
 public class Controller implements Initializable {
@@ -69,7 +68,7 @@ public class Controller implements Initializable {
     VBox console;
 
     @FXML
-    TextArea consoleTextarea;
+    StyleClassedTextArea consoleStyleClassedTextArea;
 
     private Model model;
 
@@ -94,7 +93,7 @@ public class Controller implements Initializable {
 
         // listen to when user changes tabs in the editor, bind the current selected tab and class to the save button
         tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue != null) {
+            if (newValue != null) {
                 bindClassChangesToSaveButtons(model.getCustomClassByName(newValue.getText()));
             }
         });
@@ -119,11 +118,12 @@ public class Controller implements Initializable {
 
         // intialize program with closed console
         consoleAndStatusBarContainer.getChildren().remove(console);
-
+        System.err.print("Hello pendejada");
     }
 
     /**
      * Binds the Save button and enables/disables it according to the changed-flag in the CustomClass for each class in each tab.
+     *
      * @param c class to listen for changes in
      */
     private void bindClassChangesToSaveButtons(CustomClass c) {
@@ -147,7 +147,7 @@ public class Controller implements Initializable {
         FileChooser.ExtensionFilter extFilterSvg = new FileChooser.ExtensionFilter("Java files (*.java)", "*.java", "*.JAVA");
         fileChooser.getExtensionFilters().addAll(extFilterSvg);
         File file = fileChooser.showOpenDialog(tabPane.getScene().getWindow());
-        if(file != null) {
+        if (file != null) {
             try {
                 openClass(file);
             } catch (IOException e) {
@@ -185,7 +185,6 @@ public class Controller implements Initializable {
     }
 
 
-
     /**
      * Handler for compile CustomClass events
      *
@@ -198,10 +197,10 @@ public class Controller implements Initializable {
         saveCustomClass(event);
 
         statusBar.setText("Compiling...");
-        consoleTextarea.clear();
+        consoleStyleClassedTextArea.clear();
 
         // compile all open classes
-        if(model.getClasses().size() > 0) {
+        if (model.getClasses().size() > 0) {
 
             List<File> fileList = model.getClasses().stream().map(CustomClass::getFile).collect(Collectors.toList());
 
@@ -212,7 +211,9 @@ public class Controller implements Initializable {
 
             } catch (CompilationException compilationException) {
                 openConsole();
-                consoleTextarea.setText(compilationException.getCompilationExceptionMessage());
+                consoleStyleClassedTextArea.clear();
+                consoleStyleClassedTextArea.appendText(compilationException.getCompilationExceptionMessage());
+                consoleStyleClassedTextArea.setStyleClass(0, compilationException.getCompilationExceptionMessage().length(), "exceptionText");
                 statusBar.setText("Unable to compile classes");
             } catch (IOException ioException) {
 
@@ -284,7 +285,7 @@ public class Controller implements Initializable {
 
         newCustomClass.setPath(new File(String.format("%s%s.java", config.getString(CONF_KEY_SOURCES_DIR), filePath)).toPath());
 
-        if(containsPackageDefintions(path)) {
+        if (containsPackageDefintions(path)) {
             String className = newCustomClass.getName().substring(0, newCustomClass.getName().lastIndexOf(".java"));
             String pckg = path.substring(0, path.lastIndexOf("."));
             newCustomClass.setCode(loadClassTemplate(className, pckg));
@@ -302,6 +303,7 @@ public class Controller implements Initializable {
 
     /**
      * Checks if fully qualified classname String contains package defintions
+     *
      * @param className fully qualified classname
      * @return Returns true or false
      */
@@ -312,6 +314,7 @@ public class Controller implements Initializable {
 
     /**
      * Opens a new class from given file
+     *
      * @param file of the class
      * @throws IOException
      */
@@ -332,6 +335,7 @@ public class Controller implements Initializable {
 
     /**
      * Creates a new tab in the view for a class
+     *
      * @param customClass to create tab for
      */
     private void addClassTab(CustomClass customClass) {
@@ -362,8 +366,9 @@ public class Controller implements Initializable {
 
     /**
      * Loads the default class code from template and inserts the specific class name and package
+     *
      * @param className to insert into template class code
-     * @param pckg is the package to insert into template class code
+     * @param pckg      is the package to insert into template class code
      * @return
      * @throws IOException
      * @throws URISyntaxException

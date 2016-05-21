@@ -1,10 +1,11 @@
 <!-- MVC View -->
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.StatusBar?>
-<?import javafx.geometry.Insets?>
+<?import org.fxmisc.richtext.StyleClassedTextArea?>
 <BorderPane fx:id="borderPane" fx:controller="rocks.wallenius.joop.controller.Controller"
             xmlns:fx="http://javafx.com/fxml">
     <top>
@@ -18,7 +19,7 @@
                     <MenuItem text="Exit" onAction="#exitApplication"/>
                 </Menu>
                 <Menu text="View">
-                    <CheckMenuItem text="Console" fx:id="menuItemConsole" />
+                    <CheckMenuItem text="Console" fx:id="menuItemConsole"/>
                 </Menu>
                 <Menu text="Help">
                     <MenuItem text="About"/>
@@ -46,10 +47,10 @@
         <VBox fx:id="consoleAndStatusBarContainer">
             <VBox styleClass="console" fx:id="console">
                 <ToolBar>
-                    <Pane HBox.hgrow="ALWAYS" />
+                    <Pane HBox.hgrow="ALWAYS"/>
                     <Button onAction="#closeConsole">
                         <padding>
-                            <Insets top="0" right="0" left="0" bottom="0" />
+                            <Insets top="0" right="0" left="0" bottom="0"/>
                         </padding>
                         <graphic>
                             <ImageView>
@@ -58,7 +59,7 @@
                         </graphic>
                     </Button>
                 </ToolBar>
-                <TextArea fx:id="consoleTextarea" editable="false"/>
+                <StyleClassedTextArea fx:id="consoleStyleClassedTextArea" editable="false"/>
             </VBox>
             <StatusBar fx:id="statusBar"/>
         </VBox>
