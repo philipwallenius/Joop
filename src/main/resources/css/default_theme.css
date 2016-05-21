@@ -8,6 +8,15 @@
 
 }
 
+/*
+ * CONSOLE
+ */
+
+.console ToolBar Button {
+    -fx-background-insets: 0;
+    -fx-background-color: transparent, transparent, transparent, transparent;
+}
+
 .console TextArea {
     -fx-font-family: monospace;
 

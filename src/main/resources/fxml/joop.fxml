@@ -4,8 +4,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.StatusBar?>
-<?import javafx.scene.text.TextFlow?>
-<?import javafx.scene.text.Text?>
+<?import javafx.geometry.Insets?>
 <BorderPane fx:id="borderPane" fx:controller="rocks.wallenius.joop.controller.Controller"
             xmlns:fx="http://javafx.com/fxml">
     <top>
@@ -17,6 +16,9 @@
                     <MenuItem text="Save" fx:id="menuItemSave" onAction="#saveCustomClass"/>
                     <MenuItem text="Compile" fx:id="menuItemCompile" onAction="#compileClasses"/>
                     <MenuItem text="Exit" onAction="#exitApplication"/>
+                </Menu>
+                <Menu text="View">
+                    <MenuItem text="Console" onAction="#openConsole" />
                 </Menu>
                 <Menu text="Help">
                     <MenuItem text="About"/>
@@ -41,17 +43,14 @@
         </SplitPane>
     </center>
     <bottom>
-        <VBox>
+        <VBox fx:id="consoleAndStatusBarContainer">
             <VBox styleClass="console" fx:id="console">
                 <ToolBar>
-                    <!--<Button>-->
-                    <!--<graphic>-->
-                    <!--<ImageView>-->
-                    <!--<Image url="@/icons/cross.png"/>-->
-                    <!--</ImageView>-->
-                    <!--</graphic>-->
-                    <!--</Button>-->
-                    <Button>
+                    <Pane HBox.hgrow="ALWAYS" />
+                    <Button onAction="#closeConsole">
+                        <padding>
+                            <Insets top="0" right="0" left="0" bottom="0" />
+                        </padding>
                         <graphic>
                             <ImageView>
                                 <Image url="@/icons/cross.png"/>
@@ -59,7 +58,7 @@
                         </graphic>
                     </Button>
                 </ToolBar>
-                <TextArea fx:id="consoleTextarea" editable="false" />
+                <TextArea fx:id="consoleTextarea" editable="false"/>
             </VBox>
             <StatusBar fx:id="statusBar"/>
         </VBox>

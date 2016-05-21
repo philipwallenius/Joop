@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.controlsfx.control.StatusBar;
@@ -55,6 +56,12 @@ public class Controller implements Initializable {
 
     @FXML
     StatusBar statusBar;
+
+    @FXML
+    VBox consoleAndStatusBarContainer;
+
+    @FXML
+    VBox console;
 
     @FXML
     TextArea consoleTextarea;
@@ -150,6 +157,18 @@ public class Controller implements Initializable {
         }
     }
 
+    @FXML
+    protected void closeConsole() {
+        consoleAndStatusBarContainer.getChildren().remove(console);
+    }
+
+    @FXML
+    protected void openConsole() {
+        if(!consoleAndStatusBarContainer.getChildren().contains(console)) {
+            consoleAndStatusBarContainer.getChildren().add(0, console);
+        }
+    }
+
     /**
      * Handler for compile CustomClass events
      *
@@ -160,7 +179,7 @@ public class Controller implements Initializable {
 
         // save classes before compiling
         saveCustomClass(event);
-        
+
         statusBar.setText("Compiling...");
         consoleTextarea.clear();
 
@@ -175,10 +194,9 @@ public class Controller implements Initializable {
                 statusBar.setText("Compilation completed successfully");
 
             } catch (CompilationException compilationException) {
+                openConsole();
                 consoleTextarea.setText(compilationException.getCompilationExceptionMessage());
                 statusBar.setText("Unable to compile classes");
-
-
             } catch (IOException ioException) {
 
                 ioException.printStackTrace();
