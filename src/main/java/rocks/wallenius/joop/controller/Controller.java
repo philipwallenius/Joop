@@ -158,7 +158,11 @@ public class Controller implements Initializable {
     @FXML
     protected void compileClasses(ActionEvent event) {
 
+        // save classes before compiling
+        saveCustomClass(event);
+        
         statusBar.setText("Compiling...");
+        consoleTextarea.clear();
 
         // compile all open classes
         if(model.getClasses().size() > 0) {
@@ -168,10 +172,12 @@ public class Controller implements Initializable {
             try {
 
                 CompilerUtil.compile(fileList.toArray(new File[fileList.size()]));
+                statusBar.setText("Compilation completed successfully");
 
             } catch (CompilationException compilationException) {
                 consoleTextarea.setText(compilationException.getCompilationExceptionMessage());
                 statusBar.setText("Unable to compile classes");
+
 
             } catch (IOException ioException) {
 
@@ -180,10 +186,7 @@ public class Controller implements Initializable {
                 statusBar.setText("Unable to compile classes");
 
             }
-
         }
-
-        statusBar.setText("Compilation completed successfully");
 
     }
 

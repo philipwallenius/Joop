@@ -1,4 +1,4 @@
-package rocks.wallenius.joop.gui;
+package rocks.wallenius.joop.main;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
