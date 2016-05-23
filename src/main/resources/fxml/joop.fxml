@@ -1,4 +1,3 @@
-<!-- MVC View -->
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
@@ -6,17 +5,16 @@
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.StatusBar?>
 <?import org.fxmisc.richtext.StyleClassedTextArea?>
-<BorderPane fx:id="borderPane" fx:controller="rocks.wallenius.joop.controller.Controller"
-            xmlns:fx="http://javafx.com/fxml">
+<BorderPane fx:controller="rocks.wallenius.joop.controller.GuiController" xmlns:fx="http://javafx.com/fxml">
     <top>
         <VBox>
             <MenuBar>
                 <Menu text="File">
-                    <MenuItem text="New" onAction="#newCustomClass"/>
-                    <MenuItem text="Open" onAction="#openCustomClass"/>
+                    <MenuItem text="New" fx:id="menuItemNew" onAction="#newCustomClass"/>
+                    <MenuItem text="Open" fx:id="menuItemOpen" onAction="#openCustomClass"/>
                     <MenuItem text="Save" fx:id="menuItemSave" onAction="#saveCustomClass"/>
                     <MenuItem text="Compile" fx:id="menuItemCompile" onAction="#compileClasses"/>
-                    <MenuItem text="Exit" onAction="#exitApplication"/>
+                    <MenuItem text="Exit" fx:id="menuItemExit" onAction="#exitApplication"/>
                 </Menu>
                 <Menu text="View">
                     <CheckMenuItem text="Console" fx:id="menuItemConsole"/>
@@ -26,8 +24,8 @@
                 </Menu>
             </MenuBar>
             <ToolBar>
-                <Button text="New" onAction="#newCustomClass"/>
-                <Button text="Open" onAction="#openCustomClass"/>
+                <Button text="New" fx:id="buttonNew" onAction="#newCustomClass"/>
+                <Button text="Open" fx:id="buttonOpen" onAction="#openCustomClass"/>
                 <Button text="Save" fx:id="buttonSave" onAction="#saveCustomClass"/>
                 <Button text="Compile" fx:id="buttonCompile" onAction="#compileClasses"/>
             </ToolBar>
@@ -39,7 +37,7 @@
             </TabPane>
             <SplitPane orientation="VERTICAL">
                 <StackPane styleClass="class-view"/>
-                <StackPane styleClass="object-view"/>
+                <StackPane styleClass="class-view"/>
             </SplitPane>
         </SplitPane>
     </center>

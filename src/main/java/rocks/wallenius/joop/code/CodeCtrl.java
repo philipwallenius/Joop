@@ -2,7 +2,7 @@ package rocks.wallenius.joop.code;
 
 /* 
 * CodeCtrl.java
-* Controller for the Code entity object.
+* GuiController for the Code entity object.
 * 
 * v1.1 
 * 13/02/2012 
