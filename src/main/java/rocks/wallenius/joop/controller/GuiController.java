@@ -4,6 +4,7 @@ import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -58,6 +59,12 @@ public class GuiController implements Initializable {
     VBox console;
 
     @FXML
+    StackPane classView;
+
+    @FXML
+    StackPane objectView;
+
+    @FXML
     StyleClassedTextArea consoleStyleClassedTextArea;
 
     private MainController mainController;
@@ -72,11 +79,13 @@ public class GuiController implements Initializable {
     public GuiController() {
         model = new Model();
         mainController = new MainController(model);
-        classViewController = new ClassViewController();
+        classViewController = new ClassViewController(model);
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        classViewController.setCanvas(classView);
 
         buttonSave.setDisable(true);
         buttonCompile.setDisable(true);
@@ -157,6 +166,7 @@ public class GuiController implements Initializable {
 
                 mainController.compileClasses();
                 mainController.loadClasses();
+                classViewController.drawClassDiagram();
                 statusBar.setText("Compilation completed successfully");
 
             } catch (CompilationException compilationException) {

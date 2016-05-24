@@ -36,8 +36,8 @@
             <TabPane fx:id="tabPane">
             </TabPane>
             <SplitPane orientation="VERTICAL">
-                <StackPane styleClass="class-view"/>
-                <StackPane styleClass="class-view"/>
+                <StackPane fx:id="classView" styleClass="class-view"/>
+                <StackPane fx:id="objectView" styleClass="object-view"/>
             </SplitPane>
         </SplitPane>
     </center>
