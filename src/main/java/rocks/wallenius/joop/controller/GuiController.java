@@ -62,6 +62,8 @@ public class GuiController implements Initializable {
 
     private MainController mainController;
 
+    private ClassViewController classViewController;
+
     private Model model;
 
     /**
@@ -70,6 +72,7 @@ public class GuiController implements Initializable {
     public GuiController() {
         model = new Model();
         mainController = new MainController(model);
+        classViewController = new ClassViewController();
     }
 
     @Override
@@ -153,6 +156,7 @@ public class GuiController implements Initializable {
             try {
 
                 mainController.compileClasses();
+                mainController.loadClasses();
                 statusBar.setText("Compilation completed successfully");
 
             } catch (CompilationException compilationException) {
@@ -162,9 +166,11 @@ public class GuiController implements Initializable {
                 consoleStyleClassedTextArea.setStyleClass(0, compilationException.getCompilationExceptionMessage().length(), "exceptionText");
                 statusBar.setText("Unable to compile classes");
             } catch (IOException ioException) {
-                ioException.printStackTrace();
                 new Alert(Alert.AlertType.ERROR, "Unable to compile classes").showAndWait();
                 statusBar.setText("Unable to compile classes");
+            } catch(ClassNotFoundException cnfException) {
+                new Alert(Alert.AlertType.ERROR, "Unable to load compiled classes").showAndWait();
+                statusBar.setText("Unable to load compiled classes");
             }
         }
 

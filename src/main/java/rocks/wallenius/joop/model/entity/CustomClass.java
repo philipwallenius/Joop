@@ -15,6 +15,7 @@ public class CustomClass {
     private CodeArea codeArea;
     private Path path;
     private BooleanProperty changed;
+    private Class loadedClass;
 
     public CustomClass() {
         codeArea = new CodeArea();
@@ -23,6 +24,11 @@ public class CustomClass {
 
     public String getName() {
         return path.getFileName().toString();
+    }
+
+    public String getNameWithoutFileExtension() {
+        String name = path.getFileName().toString();
+        return name.substring(0, name.lastIndexOf('.'));
     }
 
     public CodeArea getCodeArea() {
@@ -65,4 +71,13 @@ public class CustomClass {
     public void setChanged(boolean changed) {
         this.changed.set(changed);
     }
+
+    public Class getLoadedClass() {
+        return loadedClass;
+    }
+
+    public void setLoadedClass(Class loadedClass) {
+        this.loadedClass = loadedClass;
+    }
+
 }

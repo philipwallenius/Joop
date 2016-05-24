@@ -9,8 +9,10 @@ import rocks.wallenius.joop.util.ClassFileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
 class MainController {
 
     private final static String CONF_KEY_SOURCES_DIR = "sources.directory";
+    private final static String CONF_KEY_COMPILATION_DIR = "compilation.directory";
     private Model model;
     private static ConfigurationService config;
 
@@ -137,7 +140,7 @@ class MainController {
      * @throws CompilationException
      * @throws IOException
      */
-    void compileClasses() throws CompilationException, IOException {
+    void compileClasses() throws CompilationException, IOException, ClassNotFoundException {
 
         // save all classes
         for(CustomClass customClass : model.getClasses()) {
@@ -150,6 +153,23 @@ class MainController {
             CompilerUtil.compile(fileList.toArray(new File[fileList.size()]));
         }
 
+    }
+
+    /**
+     * Loads compiled classes dynamically
+     */
+    void loadClasses() throws MalformedURLException, ClassNotFoundException {
+        for(CustomClass customClass : model.getClasses()) {
+
+            URL[] urls = new URL[] { new URL("file:" + config.getString(CONF_KEY_COMPILATION_DIR)) };
+            //Create a new URLClassLoader with url to directory
+            ClassLoader classLoader = new URLClassLoader(urls);
+
+            //Load the class and return it
+            Class loadedClass = classLoader.loadClass(customClass.getNameWithoutFileExtension());
+            customClass.setLoadedClass(loadedClass);
+
+        }
     }
 
 }
