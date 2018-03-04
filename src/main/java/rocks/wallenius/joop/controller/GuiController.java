@@ -12,17 +12,17 @@ import org.controlsfx.control.StatusBar;
 import org.fxmisc.richtext.StyleClassedTextArea;
 import rocks.wallenius.joop.compiler.CompilationException;
 import rocks.wallenius.joop.gui.dialog.NewDialog;
-import rocks.wallenius.joop.model.Model;
-import rocks.wallenius.joop.model.entity.CustomClass;
+import rocks.wallenius.joop.model.entity.JoopClass;
+import rocks.wallenius.joop.model.entity.Tab;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 /**
  * MVC GuiController
@@ -71,21 +71,25 @@ public class GuiController implements Initializable {
 
     private ClassViewController classViewController;
 
-    private Model model;
+    private ObjectViewController objectViewController;
+
+//    private Model model;
 
     /**
      * MVC components instantiated from this constructor
      */
     public GuiController() {
-        model = new Model();
-        mainController = new MainController(model);
-        classViewController = new ClassViewController(model);
+//        model = new Model();
+        List<JoopClass> classes = new ArrayList<JoopClass>();
+        mainController = new MainController(classes);
+        classViewController = new ClassViewController(classes);
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
         classViewController.setCanvas(classView);
+//        objectViewController.setCanvas(objectView);
 
         buttonSave.setDisable(true);
         buttonCompile.setDisable(true);
@@ -94,16 +98,16 @@ public class GuiController implements Initializable {
 
         setupGuiBindings();
 
-        // intialize program with closed console
+        // initialize program with a closed console
         consoleAndStatusBarContainer.getChildren().remove(console);
 
     }
 
     /**
-     * Handler for open CustomClass events
+     * Handler for open button events
      */
     @FXML
-    protected void openCustomClass() {
+    protected void open() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Class");
         FileChooser.ExtensionFilter extFilterSvg = new FileChooser.ExtensionFilter("Java files (*.java)", "*.java", "*.JAVA");
@@ -111,10 +115,8 @@ public class GuiController implements Initializable {
         File file = fileChooser.showOpenDialog(tabPane.getScene().getWindow());
         if (file != null) {
             try {
-
-                CustomClass loadedCustomClass = mainController.openClass(file);
-                addClassTab(loadedCustomClass);
-
+                JoopClass loadedClass = mainController.openClass(file);
+                addTab(loadedClass);
             } catch (IOException e) {
                 e.printStackTrace();
                 new Alert(Alert.AlertType.ERROR, "Unable to load class").showAndWait();
@@ -123,14 +125,24 @@ public class GuiController implements Initializable {
     }
 
     /**
-     * Handler for save CustomClass events
+     * Handler for save button events
      */
     @FXML
-    protected void saveCustomClass() {
-        Tab tab = tabPane.getSelectionModel().getSelectedItem();
-        CustomClass c = model.getCustomClassByName(tab.getText());
+    protected void save() {
+        saveClass(tabPane.getSelectionModel().getSelectedItem());
+    }
+
+    private void saveAll() {
+        for(javafx.scene.control.Tab currentTab : tabPane.getTabs()) {
+            saveClass(currentTab);
+        }
+    }
+
+    private void saveClass(javafx.scene.control.Tab t) {
+        Tab tab = (Tab) t;
         try {
-            mainController.saveClass(c);
+            mainController.saveClass(tab.getClazz(), tab.getCodeArea().getText());
+            tab.setChanged(false);
         } catch (IOException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "Unable to save class").showAndWait();
@@ -148,18 +160,27 @@ public class GuiController implements Initializable {
     }
 
     /**
-     * Handler for compile CustomClass events
+     * Handler for compile Tab events
      */
     @FXML
     protected void compileClasses() {
 
-        statusBar.setText("Compiling...");
-        consoleStyleClassedTextArea.clear();
+        boolean proceed = true;
+        if(isUnsavedChanges()) {
+            proceed = false;
+            Optional<ButtonType> choice = promptUnsavedChanges();
 
-        // compile all open classes
-        if (model.getClasses().size() > 0) {
+            if(choice.isPresent() && choice.get() == ButtonType.OK) {
+                saveAll();
+                proceed = true;
+            }
+        }
 
-            List<File> fileList = model.getClasses().stream().map(CustomClass::getFile).collect(Collectors.toList());
+        if(proceed) {
+            statusBar.setText("Compiling...");
+            consoleStyleClassedTextArea.clear();
+
+//            List<File> fileList = model.getClasses().stream().map(rocks.wallenius.joop.model.entity.Tab::getFile).collect(Collectors.toList());
 
             try {
 
@@ -186,26 +207,25 @@ public class GuiController implements Initializable {
     }
 
     /**
-     * Handler for clicks on the new button
+     * Handler for new button events
      */
     @FXML
-    protected void newCustomClass() {
-        Optional<String> className = promptClassName();
+    protected void create() {
+        Optional<String> input = promptClassName();
 
-        if (className.isPresent()) {
+        if (input.isPresent()) {
             try {
 
-                String path = className.get();
+                String fullyQualifiedName = input.get();
 
                 // standardize the name of the new class
-                if (path.toLowerCase().endsWith(".java")) {
-                    path = path.substring(0, path.lastIndexOf("."));
+                if (fullyQualifiedName.toLowerCase().endsWith(".java")) {
+                    fullyQualifiedName = fullyQualifiedName.substring(0, fullyQualifiedName.lastIndexOf("."));
                 }
-                String filePath = path.replace(".", "/");
 
-                CustomClass createdClass = mainController.createNewClass(path);
+                JoopClass createdClass = mainController.createClass(fullyQualifiedName);
 
-                addClassTab(createdClass);
+                addTab(createdClass);
 
             } catch (IOException | URISyntaxException exception) {
                 exception.printStackTrace();
@@ -222,6 +242,20 @@ public class GuiController implements Initializable {
         System.exit(0);
     }
 
+    private boolean isUnsavedChanges() {
+        boolean unsavedChanges = false;
+        for(javafx.scene.control.Tab tab : tabPane.getTabs()) {
+            if(tab instanceof Tab) {
+                Tab currentTab = (Tab) tab;
+                if(currentTab.getChanged()) {
+                    unsavedChanges = true;
+                    break;
+                }
+            }
+        }
+        return unsavedChanges;
+    }
+
     /**
      * Sets up bindings between different GUI elements
      */
@@ -230,16 +264,18 @@ public class GuiController implements Initializable {
         // listen to when user changes tabs in the editor, bind the current selected tab and class to the save button
         tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                bindClassChangesToSaveButtons(model.getCustomClassByName(newValue.getText()));
+                bindClassChangesToButtons(getTabByName(newValue.getText()));
             }
         });
 
         // enable/disable Compile-button depending on if there are open tabs in the view
-        tabPane.getTabs().addListener((ListChangeListener<Tab>) c -> {
+        tabPane.getTabs().addListener((ListChangeListener<javafx.scene.control.Tab>) c -> {
             if (tabPane.getTabs().size() > 0) {
                 buttonCompile.setDisable(false);
+                menuItemCompile.setDisable(false);
             } else {
                 buttonCompile.setDisable(true);
+                menuItemCompile.setDisable(true);
             }
         });
 
@@ -254,6 +290,15 @@ public class GuiController implements Initializable {
 
     }
 
+    private Tab getTabByName(String name) {
+        for(javafx.scene.control.Tab tab : tabPane.getTabs()) {
+            if(tab.getText().equals(name) && tab instanceof Tab) {
+                return (Tab) tab;
+            }
+        }
+        return null;
+    }
+
     /**
      * Creates a popup requesting for a class name for the new class to be created
      *
@@ -264,32 +309,36 @@ public class GuiController implements Initializable {
         return newDialog.getValue();
     }
 
-    /**
-     * Creates a new tab in the view for a class
-     *
-     * @param customClass to create tab for
-     */
-    private void addClassTab(CustomClass customClass) {
-        Tab newTab = new Tab(customClass.getName());
-        customClass.getCodeArea().setOnKeyPressed(event -> {
-            customClass.setChanged(true);
-        });
-        newTab.setContent(customClass.getCodeArea());
-        newTab.setOnClosed(event -> model.removeClass(customClass));
-        tabPane.getTabs().add(newTab);
-        tabPane.getSelectionModel().select(newTab);
-        bindClassChangesToSaveButtons(customClass);
+    private Optional<ButtonType> promptUnsavedChanges() {
+        return new Alert(Alert.AlertType.CONFIRMATION, "Do you want to save the changes to all open classes?").showAndWait();
     }
 
     /**
-     * Binds the Save button and enables/disables it according to the changed-flag in the CustomClass for each class in each tab.
+     * Creates a new tab in the view for a class
      *
-     * @param c class to listen for changes in
+     * @param clazz to create tab for
      */
-    private void bindClassChangesToSaveButtons(CustomClass c) {
-        buttonSave.setDisable(!c.getChanged());
-        menuItemSave.setDisable(!c.getChanged());
-        c.changedProperty().addListener((observable, oldValue, newValue) -> {
+    private void addTab(JoopClass clazz) {
+        Tab newTab = new Tab(clazz);
+        newTab.getCodeArea().setOnKeyPressed(event -> newTab.setChanged(true));
+        newTab.setOnClosed(event -> {
+            mainController.closeClass(newTab.getClazz());
+        });
+        tabPane.getTabs().add(newTab);
+        tabPane.getSelectionModel().select(newTab);
+        bindClassChangesToButtons(newTab);
+    }
+
+    /**
+     * Binds the Save button and enables/disables it according to the changed-flag in the Tab for each class in each tab.
+     *
+     * @param tab to listen for changes in
+     */
+    private void bindClassChangesToButtons(rocks.wallenius.joop.model.entity.Tab tab) {
+        buttonSave.setDisable(!tab.getChanged());
+        menuItemSave.setDisable(!tab.getChanged());
+
+        tab.changedProperty().addListener((observable, oldValue, newValue) -> {
             buttonSave.setDisable(!newValue);
             menuItemSave.setDisable(!newValue);
         });

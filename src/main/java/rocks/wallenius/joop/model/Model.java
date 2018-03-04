@@ -1,6 +1,6 @@
 package rocks.wallenius.joop.model;
 
-import rocks.wallenius.joop.model.entity.CustomClass;
+import rocks.wallenius.joop.model.entity.Tab;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,35 +12,35 @@ import java.util.List;
  */
 public class Model {
 
-    private List<CustomClass> classes;
-
-    public Model() {
-        classes = new ArrayList<CustomClass>();
-    }
-
-    public List<CustomClass> getClasses() {
-        return classes;
-    }
-
-    public void setClasses(List<CustomClass> classes) {
-        this.classes = classes;
-    }
-
-    public void addClass(CustomClass customClass) {
-        classes.add(customClass);
-    }
-
-    public void removeClass(CustomClass customClass) {
-        classes.remove(customClass);
-    }
-
-    public CustomClass getCustomClassByName(String name) {
-        for(CustomClass c : classes) {
-            if(c.getName().equals(name)) {
-                return c;
-            }
-        }
-        return null;
-    }
+//    private List<Tab> classes;
+//
+//    public Model() {
+//        classes = new ArrayList<Tab>();
+//    }
+//
+//    public List<Tab> getClasses() {
+//        return classes;
+//    }
+//
+//    public void setClasses(List<Tab> classes) {
+//        this.classes = classes;
+//    }
+//
+//    public void addClass(Tab tab) {
+//        classes.add(tab);
+//    }
+//
+//    public void removeClass(Tab tab) {
+//        classes.remove(tab);
+//    }
+//
+//    public Tab getCustomClassByName(String name) {
+//        for(Tab c : classes) {
+//            if(c.getName().equals(name)) {
+//                return c;
+//            }
+//        }
+//        return null;
+//    }
 
 }
