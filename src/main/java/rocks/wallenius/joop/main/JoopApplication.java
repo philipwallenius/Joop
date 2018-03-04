@@ -15,8 +15,8 @@ import javafx.stage.Stage;
 public class JoopApplication extends Application {
 
     private final static String WINDOW_TITLE = "JOOP";
-    private final static int WINDOW_WIDTH = 800;
-    private final static int WINDOW_HEIGHT = 600;
+    private final static int WINDOW_WIDTH = 1024;
+    private final static int WINDOW_HEIGHT = 768;
 
     public static void main(String[] args) {
         launch(args);
