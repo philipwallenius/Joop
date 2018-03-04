@@ -23,9 +23,6 @@ public class CompilerUtil {
         config = ConfigurationService.getInstance();
     }
 
-    /*
-     * Prevent instantiation
-     */
     private CompilerUtil() {}
 
     public static void compile(File[] files) throws IOException, CompilationException {

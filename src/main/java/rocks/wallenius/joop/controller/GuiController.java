@@ -147,7 +147,6 @@ public class GuiController implements Initializable {
         menuItemConsole.setSelected(true);
     }
 
-
     /**
      * Handler for compile CustomClass events
      */
