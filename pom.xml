@@ -10,8 +10,8 @@
 
     <properties>
         <apache-commons.version>1.3.2</apache-commons.version>
-        <richtextfx.version>0.6.10</richtextfx.version>
-        <controlsfx.version>8.40.11</controlsfx.version>
+        <richtextfx.version>0.8.2</richtextfx.version>
+        <controlsfx.version>8.40.14</controlsfx.version>
     </properties>
 
     <dependencies>
