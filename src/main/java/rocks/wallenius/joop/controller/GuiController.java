@@ -344,4 +344,12 @@ public class GuiController implements Initializable {
         });
     }
 
+    public void stop() {
+        tabPane.getTabs().forEach(tab -> {
+            if(tab instanceof Tab) {
+                ((Tab)tab).stop();
+            }
+        });
+    }
+
 }

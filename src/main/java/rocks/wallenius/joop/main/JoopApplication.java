@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import rocks.wallenius.joop.controller.GuiController;
 
 /**
  *
@@ -18,6 +19,8 @@ public class JoopApplication extends Application {
     private final static int WINDOW_WIDTH = 1024;
     private final static int WINDOW_HEIGHT = 768;
 
+    private FXMLLoader fxmlLoader;
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -25,11 +28,19 @@ public class JoopApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle(WINDOW_TITLE);
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/joop.fxml"));
+        fxmlLoader = new FXMLLoader();
+        Parent root = fxmlLoader.load(getClass().getResource("/fxml/joop.fxml"));
         Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
         scene.getStylesheets().add("css/default_theme.css");
+        scene.getStylesheets().add("css/java-keywords.css");
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    @Override
+    public void stop() {
+        GuiController controller = fxmlLoader.getController();
+        controller.stop();
     }
 
 }
