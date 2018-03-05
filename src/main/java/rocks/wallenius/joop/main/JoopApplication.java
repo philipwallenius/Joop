@@ -28,8 +28,8 @@ public class JoopApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle(WINDOW_TITLE);
-        fxmlLoader = new FXMLLoader();
-        Parent root = fxmlLoader.load(getClass().getResource("/fxml/joop.fxml"));
+        fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/joop.fxml"));
+        Parent root = fxmlLoader.load();
         Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
         scene.getStylesheets().add("css/default_theme.css");
         scene.getStylesheets().add("css/java-keywords.css");

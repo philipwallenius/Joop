@@ -3,9 +3,7 @@ package rocks.wallenius.joop.controller;
 import rocks.wallenius.joop.compiler.CompilationException;
 import rocks.wallenius.joop.compiler.CompilerUtil;
 import rocks.wallenius.joop.configuration.ConfigurationService;
-import rocks.wallenius.joop.model.Model;
 import rocks.wallenius.joop.model.entity.JoopClass;
-import rocks.wallenius.joop.model.entity.Tab;
 import rocks.wallenius.joop.util.ClassFileUtils;
 
 import java.io.File;
@@ -14,14 +12,8 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**

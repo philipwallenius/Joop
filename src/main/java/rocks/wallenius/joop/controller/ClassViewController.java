@@ -3,9 +3,7 @@ package rocks.wallenius.joop.controller;
 import javafx.scene.Group;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
-import rocks.wallenius.joop.model.Model;
 import rocks.wallenius.joop.model.entity.JoopClass;
-import rocks.wallenius.joop.model.entity.Tab;
 
 import java.util.List;
 

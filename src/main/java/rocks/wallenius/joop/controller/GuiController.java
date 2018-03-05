@@ -1,5 +1,6 @@
 package rocks.wallenius.joop.controller;
 
+import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,6 +13,7 @@ import org.controlsfx.control.StatusBar;
 import org.fxmisc.richtext.StyleClassedTextArea;
 import rocks.wallenius.joop.compiler.CompilationException;
 import rocks.wallenius.joop.gui.dialog.NewDialog;
+import rocks.wallenius.joop.gui.syntaxhighlight.SyntaxHighlighter;
 import rocks.wallenius.joop.model.entity.JoopClass;
 import rocks.wallenius.joop.model.entity.Tab;
 
@@ -73,13 +75,13 @@ public class GuiController implements Initializable {
 
     private ObjectViewController objectViewController;
 
-//    private Model model;
+    private SyntaxHighlighter syntaxHighlighter;
 
     /**
      * MVC components instantiated from this constructor
      */
     public GuiController() {
-//        model = new Model();
+        syntaxHighlighter = new SyntaxHighlighter();
         List<JoopClass> classes = new ArrayList<JoopClass>();
         mainController = new MainController(classes);
         classViewController = new ClassViewController(classes);
@@ -239,7 +241,7 @@ public class GuiController implements Initializable {
      */
     @FXML
     protected void exitApplication() {
-        System.exit(0);
+        Platform.exit();
     }
 
     private boolean isUnsavedChanges() {
@@ -264,7 +266,9 @@ public class GuiController implements Initializable {
         // listen to when user changes tabs in the editor, bind the current selected tab and class to the save button
         tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                bindClassChangesToButtons(getTabByName(newValue.getText()));
+                Tab currentTab = getTabByName(newValue.getText());
+                bindClassChangesToButtons(currentTab);
+                setSyntaxHighlightingForTab(currentTab);
             }
         });
 
@@ -288,6 +292,10 @@ public class GuiController implements Initializable {
             }
         });
 
+    }
+
+    private void setSyntaxHighlightingForTab(Tab tab) {
+        syntaxHighlighter.applySyntaxHighlighting(tab.getCodeArea());
     }
 
     private Tab getTabByName(String name) {
@@ -345,11 +353,7 @@ public class GuiController implements Initializable {
     }
 
     public void stop() {
-        tabPane.getTabs().forEach(tab -> {
-            if(tab instanceof Tab) {
-                ((Tab)tab).stop();
-            }
-        });
+        syntaxHighlighter.stop();
     }
 
 }
