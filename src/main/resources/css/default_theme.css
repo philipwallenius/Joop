@@ -42,6 +42,10 @@
     -fx-highlight-fill: #7ecfff;
 }
 
+.infoText {
+    -fx-fill: #000000;
+}
+
 .exceptionText {
     -fx-fill: #AA0202;
 }

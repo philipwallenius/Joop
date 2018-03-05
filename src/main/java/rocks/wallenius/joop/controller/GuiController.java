@@ -182,15 +182,17 @@ public class GuiController implements Initializable {
             statusBar.setText("Compiling...");
             consoleStyleClassedTextArea.clear();
 
-//            List<File> fileList = model.getClasses().stream().map(rocks.wallenius.joop.model.entity.Tab::getFile).collect(Collectors.toList());
-
             try {
 
                 mainController.compileClasses();
                 mainController.loadClasses();
                 classViewController.drawClassDiagram();
-                statusBar.setText("Compilation completed successfully");
 
+                statusBar.setText("Compilation completed successfully");
+                String msg = "Compilation completed successfully";
+                consoleStyleClassedTextArea.clear();
+                consoleStyleClassedTextArea.appendText(msg);
+                consoleStyleClassedTextArea.setStyleClass(0, msg.length(), "infoText");
             } catch (CompilationException compilationException) {
                 openConsole();
                 consoleStyleClassedTextArea.clear();

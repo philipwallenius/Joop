@@ -24,10 +24,42 @@
                 </Menu>
             </MenuBar>
             <ToolBar>
-                <Button text="New" fx:id="buttonNew" onAction="#create"/>
-                <Button text="Open" fx:id="buttonOpen" onAction="#open"/>
-                <Button text="Save" fx:id="buttonSave" onAction="#save"/>
-                <Button text="Compile" fx:id="buttonCompile" onAction="#compileClasses"/>
+                <Button fx:id="buttonNew" onAction="#create">
+                    <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@/icons/icons8-new.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button fx:id="buttonOpen" onAction="#open">
+                    <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@/icons/icons8-open.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button fx:id="buttonSave" onAction="#save">
+                    <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@/icons/icons8-save.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button fx:id="buttonCompile" onAction="#compileClasses">
+                    <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@/icons/icons8-code.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
             </ToolBar>
         </VBox>
     </top>
@@ -51,8 +83,8 @@
                             <Insets top="0" right="0" left="0" bottom="0"/>
                         </padding>
                         <graphic>
-                            <ImageView>
-                                <Image url="@/icons/cross.png"/>
+                            <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                <Image url="@/icons/icons8-close-window.png"/>
                             </ImageView>
                         </graphic>
                     </Button>
