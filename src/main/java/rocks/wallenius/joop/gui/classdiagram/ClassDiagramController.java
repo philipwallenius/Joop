@@ -4,9 +4,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.layout.StackPane;
+import rocks.wallenius.joop.gui.util.ClassMemberMapperUtil;
 import rocks.wallenius.joop.gui.WindowController;
 import rocks.wallenius.joop.model.entity.JoopClass;
-import rocks.wallenius.joop.oldgui.diagram.UmlClass;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -36,7 +36,10 @@ public class ClassDiagramController implements Initializable {
         int y = 0;
 
         for(JoopClass clazz : parentController.getClasses()) {
-            group.getChildren().add(new UmlClass(x, y, clazz));
+
+            Class loadedClass = clazz.getLoadedClass();
+
+            group.getChildren().add(new UmlClass(x, y, clazz.getNameWithoutFileExtension(), ClassMemberMapperUtil.getFields(loadedClass), ClassMemberMapperUtil.getMethods(loadedClass)));
             x += 150;
         }
     }
