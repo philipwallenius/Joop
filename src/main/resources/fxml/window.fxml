@@ -10,8 +10,7 @@
     </top>
     <center>
         <SplitPane>
-            <TabPane fx:id="tabPane">
-            </TabPane>
+            <fx:include source="tabs.fxml" fx:id="tabs" />
             <SplitPane orientation="VERTICAL">
                 <fx:include source="classdiagram.fxml" fx:id="classDiagram" />
                 <fx:include source="objectdiagram.fxml" fx:id="objectDiagram" />

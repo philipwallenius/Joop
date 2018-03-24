@@ -24,19 +24,22 @@ public class UmlClass extends VBox {
     private StackPane titleBox;
     private StackPane propertiesBox;
     private StackPane methodsBox;
+    private StackPane constructorsBox;
 
     private final static int MIN_HEIGHT = 80;
     private final static int MIN_WIDTH = 100;
 
     private String title;
     private Field[] fields;
+    private Constructor[] constructors;
     private Method[] methods;
 
-    public UmlClass(int x, int y, String title, Field[] fields, Method[] methods) {
+    public UmlClass(int x, int y, String title, Field[] fields, Constructor[] constructors, Method[] methods) {
         super();
 
         this.title = title;
         this.fields = fields;
+        this.constructors = constructors;
         this.methods = methods;
 
         setLayoutX(x);
@@ -51,6 +54,7 @@ public class UmlClass extends VBox {
         titleBox = new StackPane();
         propertiesBox = new StackPane();
         methodsBox = new StackPane();
+        constructorsBox = new StackPane();
 
         setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderStroke.THIN)));
         setPadding(new Insets(10, 10, 10, 10));
@@ -69,12 +73,13 @@ public class UmlClass extends VBox {
         Background bg = new Background(new BackgroundFill(lg1, null, null));
         setBackground(bg);
 
-        getChildren().addAll(titleBox, propertiesBox, methodsBox);
+        getChildren().addAll(titleBox, propertiesBox, constructorsBox, methodsBox);
     }
 
     private void initializeContent() {
         drawTitle();
         drawFields();
+        drawConstructors();
         drawMethods();
     }
 
@@ -112,15 +117,33 @@ public class UmlClass extends VBox {
             props.add(text);
         }
 
-        Rectangle fieldsContainer = new Rectangle();
-        fieldsContainer.setFill(Color.web("#FFFFF0"));
-        propertiesBox.getChildren().addAll(fieldsContainer);
-
         for(Text prop : props) {
             propertiesHolder.getChildren().addAll(prop);
         }
 
         propertiesBox.getChildren().addAll(propertiesHolder);
+    }
+
+    private void drawConstructors() {
+        VBox constructorsHolder = new VBox();
+        constructorsHolder.setAlignment(Pos.BASELINE_LEFT);
+        constructorsHolder.setPadding(new Insets(0, 0, 10, 0));
+
+
+        List<Text> c = new ArrayList<Text>();
+
+        for(Constructor constructor : constructors) {
+            Text text = new Text();
+            text.setText(String.format("%s %s()", getAccessModifierSymbol(constructor.getAccessModifier()), constructor.getName()));
+            text.setFont(Font.font(null, FontWeight.BOLD, 10));
+            c.add(text);
+        }
+
+        for(Text prop : c) {
+            constructorsHolder.getChildren().addAll(prop);
+        }
+
+        constructorsBox.getChildren().addAll(constructorsHolder);
     }
 
     private void drawMethods() {
@@ -135,12 +158,11 @@ public class UmlClass extends VBox {
             Text text = new Text();
             text.setText(String.format("%s %s() : %s", getAccessModifierSymbol(method.getAccessModifier()), method.getName(), method.getReturnType()));
             text.setFont(Font.font(null, FontWeight.BOLD, 10));
+            if(method.isStatic()) {
+                text.setUnderline(true);
+            }
             m.add(text);
         }
-
-        Rectangle methodsContainer = new Rectangle();
-        methodsContainer.setFill(Color.web("#FFFFF0"));
-        methodsBox.getChildren().addAll(methodsContainer);
 
         for(Text prop : m) {
             methodsHolder.getChildren().addAll(prop);

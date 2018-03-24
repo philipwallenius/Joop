@@ -1,22 +1,21 @@
 package rocks.wallenius.joop.gui;
 
 import javafx.application.Platform;
-import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import org.controlsfx.control.StatusBar;
 import rocks.wallenius.joop.compiler.CompilationException;
 import rocks.wallenius.joop.controller.MainController;
 import rocks.wallenius.joop.gui.classdiagram.ClassDiagramController;
 import rocks.wallenius.joop.gui.console.ConsoleController;
 import rocks.wallenius.joop.gui.objectdiagram.ObjectDiagramController;
+import rocks.wallenius.joop.gui.tabs.TabsController;
 import rocks.wallenius.joop.oldgui.dialog.NewDialog;
-import rocks.wallenius.joop.oldgui.syntaxhighlight.SyntaxHighlighter;
 import rocks.wallenius.joop.gui.menubar.MenubarController;
 import rocks.wallenius.joop.model.entity.JoopClass;
 import rocks.wallenius.joop.model.entity.Tab;
@@ -36,7 +35,7 @@ import java.util.*;
 public class WindowController implements Initializable {
 
     @FXML
-    TabPane tabPane;
+    TabsController tabsController;
 
     @FXML
     StatusBar statusBar;
@@ -64,35 +63,28 @@ public class WindowController implements Initializable {
 
     private MainController mainController;
 
-    private SyntaxHighlighter syntaxHighlighter;
-
-    /**
-     * MVC components instantiated from this constructor
-     */
     public WindowController() {
-        syntaxHighlighter = new SyntaxHighlighter();
-        List<JoopClass> classes = new ArrayList<JoopClass>();
-        mainController = new MainController(classes);
+        mainController = new MainController(new ArrayList<>());
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        tabsController.setParentController(this);
         menubarController.setParentController(this);
         toolbarController.setParentController(this);
         consoleController.setParentController(this);
         classDiagramController.setParentController(this);
         objectDiagramController.setParentController(this);
 
-        setupGuiBindings();
-
-        // initialize program with a closed console
+        // initialize with a closed console
         consoleAndStatusBarContainer.getChildren().remove(console);
 
+        setupUiBindings();
     }
 
     /**
-     * Handler for open button events
+     * Handler for open button
      */
     @FXML
     public void open() {
@@ -100,7 +92,7 @@ public class WindowController implements Initializable {
         fileChooser.setTitle("Open Class");
         FileChooser.ExtensionFilter extFilterSvg = new FileChooser.ExtensionFilter("Java files (*.java)", "*.java", "*.JAVA");
         fileChooser.getExtensionFilters().addAll(extFilterSvg);
-        File file = fileChooser.showOpenDialog(tabPane.getScene().getWindow());
+        File file = fileChooser.showOpenDialog(getWindow());
         if (file != null) {
 
             String className = file.getName();
@@ -112,7 +104,7 @@ public class WindowController implements Initializable {
 
             try {
                 JoopClass loadedClass = mainController.openClass(className, file);
-                addTab(loadedClass);
+                tabsController.addTab(loadedClass);
             } catch (IOException e) {
                 e.printStackTrace();
                 new Alert(Alert.AlertType.ERROR, "Unable to load class").showAndWait();
@@ -121,15 +113,15 @@ public class WindowController implements Initializable {
     }
 
     /**
-     * Handler for save button events
+     * Handler for save button
      */
     @FXML
     public void save() {
-        saveClass(tabPane.getSelectionModel().getSelectedItem());
+        saveClass(tabsController.getActiveTab());
     }
 
     private void saveAll() {
-        for(javafx.scene.control.Tab currentTab : tabPane.getTabs()) {
+        for(javafx.scene.control.Tab currentTab : tabsController.getTabs()) {
             saveClass(currentTab);
         }
     }
@@ -146,13 +138,13 @@ public class WindowController implements Initializable {
     }
 
     /**
-     * Handler for compile Tab events
+     * Handler for compile button
      */
     @FXML
     public void compileClasses() {
 
         boolean proceed = true;
-        if(isUnsavedChanges()) {
+        if(tabsController.isUnsavedChanges()) {
             proceed = false;
             Optional<ButtonType> choice = promptUnsavedChanges();
 
@@ -193,7 +185,7 @@ public class WindowController implements Initializable {
     }
 
     /**
-     * Handler for new button events
+     * Handler for new button
      */
     @FXML
     public void create() {
@@ -211,7 +203,7 @@ public class WindowController implements Initializable {
 
                 JoopClass createdClass = mainController.createClass(fullyQualifiedName);
 
-                addTab(createdClass);
+                tabsController.addTab(createdClass);
 
             } catch (IOException | URISyntaxException exception) {
                 exception.printStackTrace();
@@ -230,45 +222,40 @@ public class WindowController implements Initializable {
         Platform.exit();
     }
 
-    private boolean isUnsavedChanges() {
-        boolean unsavedChanges = false;
-        for(javafx.scene.control.Tab tab : tabPane.getTabs()) {
-            if(tab instanceof Tab) {
-                Tab currentTab = (Tab) tab;
-                if(currentTab.getChanged()) {
-                    unsavedChanges = true;
-                    break;
-                }
-            }
-        }
-        return unsavedChanges;
+    public void closeClass(String fullyQualifiedName) {
+        mainController.closeClass(fullyQualifiedName);
     }
 
-    /**
-     * Sets up bindings between different GUI elements
-     */
-    private void setupGuiBindings() {
+    public void stop() {
+        tabsController.stop();
+    }
 
-        // listen to when user changes tabs in the editor, bind the current selected tab and class to the save button
-        tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                Tab currentTab = getTabByName(newValue.getText());
-                bindClassChangesToButtons(currentTab);
-                setSyntaxHighlightingForTab(currentTab);
-            }
-        });
+    public List<JoopClass> getClasses() {
+        return mainController.getClasses();
+    }
 
-        // enable/disable Compile-button depending on if there are open tabs in the view
-        tabPane.getTabs().addListener((ListChangeListener<javafx.scene.control.Tab>) c -> {
-            if (tabPane.getTabs().size() > 0) {
-                toolbarController.getButtonCompile().setDisable(false);
-                menubarController.getMenuItemCompile().setDisable(false);
-            } else {
-                toolbarController.getButtonCompile().setDisable(true);
-                menubarController.getMenuItemCompile().setDisable(true);
-            }
-        });
+    public MenubarController getMenubarController() {
+        return menubarController;
+    }
 
+    public ToolbarController getToolbarController() {
+        return toolbarController;
+    }
+
+    private Window getWindow() {
+        return statusBar.getScene().getWindow();
+    }
+
+    private Optional<String> promptClassName() {
+        NewDialog newDialog = new NewDialog((Stage) getWindow());
+        return newDialog.getValue();
+    }
+
+    private Optional<ButtonType> promptUnsavedChanges() {
+        return new Alert(Alert.AlertType.CONFIRMATION, "Do you want to save the changes to all open classes?").showAndWait();
+    }
+
+    private void setupUiBindings() {
         // toggle console window depending on View menu Console item
         menubarController.getMenuItemConsole().selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
@@ -277,73 +264,5 @@ public class WindowController implements Initializable {
                 consoleAndStatusBarContainer.getChildren().remove(console);
             }
         });
-
     }
-
-    private void setSyntaxHighlightingForTab(Tab tab) {
-        syntaxHighlighter.applySyntaxHighlighting(tab.getCodeArea());
-    }
-
-    private Tab getTabByName(String name) {
-        for(javafx.scene.control.Tab tab : tabPane.getTabs()) {
-            if(tab.getText().equals(name) && tab instanceof Tab) {
-                return (Tab) tab;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Creates a popup requesting for a class name for the new class to be created
-     *
-     * @return Returns an Optional with the class name as a String
-     */
-    private Optional<String> promptClassName() {
-        NewDialog newDialog = new NewDialog((Stage) tabPane.getScene().getWindow());
-        return newDialog.getValue();
-    }
-
-    private Optional<ButtonType> promptUnsavedChanges() {
-        return new Alert(Alert.AlertType.CONFIRMATION, "Do you want to save the changes to all open classes?").showAndWait();
-    }
-
-    /**
-     * Creates a new tab in the view for a class
-     *
-     * @param clazz to create tab for
-     */
-    private void addTab(JoopClass clazz) {
-        Tab newTab = new Tab(clazz);
-        newTab.getCodeArea().setOnKeyPressed(event -> newTab.setChanged(true));
-        newTab.setOnClosed(event -> {
-            mainController.closeClass(newTab.getClazz());
-        });
-        tabPane.getTabs().add(newTab);
-        tabPane.getSelectionModel().select(newTab);
-        bindClassChangesToButtons(newTab);
-    }
-
-    /**
-     * Binds the Save button and enables/disables it according to the changed-flag in the Tab for each class in each tab.
-     *
-     * @param tab to listen for changes in
-     */
-    private void bindClassChangesToButtons(rocks.wallenius.joop.model.entity.Tab tab) {
-        toolbarController.getButtonSave().setDisable(!tab.getChanged());
-        menubarController.getMenuItemSave().setDisable(!tab.getChanged());
-
-        tab.changedProperty().addListener((observable, oldValue, newValue) -> {
-            toolbarController.getButtonSave().setDisable(!newValue);
-            menubarController.getMenuItemSave().setDisable(!newValue);
-        });
-    }
-
-    public void stop() {
-        syntaxHighlighter.stop();
-    }
-
-    public List<JoopClass> getClasses() {
-        return mainController.getClasses();
-    }
-
 }

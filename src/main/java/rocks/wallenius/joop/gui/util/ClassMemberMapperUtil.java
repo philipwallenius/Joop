@@ -1,5 +1,6 @@
 package rocks.wallenius.joop.gui.util;
 
+import rocks.wallenius.joop.gui.classdiagram.Constructor;
 import rocks.wallenius.joop.gui.classdiagram.Field;
 import rocks.wallenius.joop.gui.classdiagram.Method;
 
@@ -26,6 +27,17 @@ public class ClassMemberMapperUtil {
         }
 
         return fields.toArray(new Field[fields.size()]);
+    }
+
+    public static Constructor[] getConstructors(Class source) {
+        List<Constructor> constructors = new ArrayList<>();
+
+        for(java.lang.reflect.Constructor constructor : source.getConstructors()) {
+            String modifiers = Modifier.toString(constructor.getModifiers());
+            constructors.add(new Constructor(constructor.getName(), getAccessModifier(modifiers)));
+        }
+
+        return constructors.toArray(new Constructor[constructors.size()]);
     }
 
     public static Method[] getMethods(Class source) {

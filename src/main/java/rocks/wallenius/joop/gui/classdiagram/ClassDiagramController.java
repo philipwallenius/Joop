@@ -39,7 +39,7 @@ public class ClassDiagramController implements Initializable {
 
             Class loadedClass = clazz.getLoadedClass();
 
-            group.getChildren().add(new UmlClass(x, y, clazz.getNameWithoutFileExtension(), ClassMemberMapperUtil.getFields(loadedClass), ClassMemberMapperUtil.getMethods(loadedClass)));
+            group.getChildren().add(new UmlClass(x, y, clazz.getNameWithoutFileExtension(), ClassMemberMapperUtil.getFields(loadedClass), ClassMemberMapperUtil.getConstructors(loadedClass), ClassMemberMapperUtil.getMethods(loadedClass)));
             x += 150;
         }
     }
