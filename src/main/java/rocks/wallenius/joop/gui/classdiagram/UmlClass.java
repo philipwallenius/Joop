@@ -104,7 +104,7 @@ public class UmlClass extends VBox {
 
         for(Field field : fields) {
             Text text = new Text();
-            text.setText(String.format("%s %s", getAccessModifierSymbol(field.getAccessModifier()), field.isFinal() ? field.getName().toUpperCase() : field.getName()));
+            text.setText(String.format("%s %s : %s", getAccessModifierSymbol(field.getAccessModifier()), field.isFinal() ? field.getName().toUpperCase() : field.getName(), field.getType()));
             text.setFont(Font.font(null, FontPosture.REGULAR, 10));
             if(field.isStatic()) {
                 text.setUnderline(true);
@@ -133,7 +133,7 @@ public class UmlClass extends VBox {
 
         for(Method method : methods) {
             Text text = new Text();
-            text.setText(String.format("%s %s", getAccessModifierSymbol(method.getAccessModifier()), method.getName()));
+            text.setText(String.format("%s %s() : %s", getAccessModifierSymbol(method.getAccessModifier()), method.getName(), method.getReturnType()));
             text.setFont(Font.font(null, FontWeight.BOLD, 10));
             m.add(text);
         }

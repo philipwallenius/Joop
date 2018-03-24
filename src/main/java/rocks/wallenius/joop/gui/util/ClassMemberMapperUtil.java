@@ -20,7 +20,8 @@ public class ClassMemberMapperUtil {
         for(java.lang.reflect.Field field : source.getDeclaredFields()) {
 
             String modifiers = Modifier.toString(field.getModifiers());
-            fields.add(new Field(field.getName(), getAccessModifier(modifiers), isStatic(modifiers), isFinal(modifiers)));
+            String type = field.getType().getSimpleName();
+            fields.add(new Field(field.getName(), type, getAccessModifier(modifiers), isStatic(modifiers), isFinal(modifiers)));
 
         }
 
@@ -33,7 +34,8 @@ public class ClassMemberMapperUtil {
         for(java.lang.reflect.Method method : source.getDeclaredMethods()) {
 
             String modifiers = Modifier.toString(method.getModifiers());
-            methods.add(new Method(method.getName(), getAccessModifier(modifiers), isStatic(modifiers), isFinal(modifiers)));
+            String returnType = method.getReturnType().getSimpleName();
+            methods.add(new Method(method.getName(), returnType, getAccessModifier(modifiers), isStatic(modifiers), isFinal(modifiers)));
 
         }
 

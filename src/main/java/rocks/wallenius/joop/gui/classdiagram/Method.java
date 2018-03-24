@@ -6,12 +6,14 @@ package rocks.wallenius.joop.gui.classdiagram;
 public class Method {
 
     private String name;
+    private String returnType;
     private String accessModifier;
     private boolean isStatic;
     private boolean isFinal;
 
-    public Method(String name, String accessModifier, boolean isStatic, boolean isFinal) {
+    public Method(String name, String returnType, String accessModifier, boolean isStatic, boolean isFinal) {
         this.name = name;
+        this.returnType = returnType;
         this.accessModifier = accessModifier;
         this.isStatic = isStatic;
         this.isFinal = isFinal;
@@ -19,6 +21,10 @@ public class Method {
 
     public String getName() {
         return name;
+    }
+
+    public String getReturnType() {
+        return returnType;
     }
 
     public String getAccessModifier() {
