@@ -7,10 +7,12 @@ public class Constructor {
 
     private String name;
     private String accessModifier;
+    private Parameter[] parameters;
 
-    public Constructor(String name, String accessModifier) {
+    public Constructor(String name, String accessModifier, Parameter[] parameters) {
         this.name = name;
         this.accessModifier = accessModifier;
+        this.parameters = parameters;
     }
 
     public String getName() {
@@ -19,6 +21,10 @@ public class Constructor {
 
     public String getAccessModifier() {
         return accessModifier;
+    }
+
+    public Parameter[] getParameters() {
+        return parameters;
     }
 
 }

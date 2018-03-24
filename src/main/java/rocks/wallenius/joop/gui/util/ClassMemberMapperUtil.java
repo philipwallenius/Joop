@@ -3,6 +3,7 @@ package rocks.wallenius.joop.gui.util;
 import rocks.wallenius.joop.gui.classdiagram.Constructor;
 import rocks.wallenius.joop.gui.classdiagram.Field;
 import rocks.wallenius.joop.gui.classdiagram.Method;
+import rocks.wallenius.joop.gui.classdiagram.Parameter;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class ClassMemberMapperUtil {
 
         for(java.lang.reflect.Constructor constructor : source.getConstructors()) {
             String modifiers = Modifier.toString(constructor.getModifiers());
-            constructors.add(new Constructor(constructor.getName(), getAccessModifier(modifiers)));
+            constructors.add(new Constructor(constructor.getName(), getAccessModifier(modifiers), getParameters(constructor.getParameters())));
         }
 
         return constructors.toArray(new Constructor[constructors.size()]);
@@ -47,7 +48,7 @@ public class ClassMemberMapperUtil {
 
             String modifiers = Modifier.toString(method.getModifiers());
             String returnType = method.getReturnType().getSimpleName();
-            methods.add(new Method(method.getName(), returnType, getAccessModifier(modifiers), isStatic(modifiers), isFinal(modifiers)));
+            methods.add(new Method(method.getName(), returnType, getAccessModifier(modifiers), getParameters(method.getParameters()), isStatic(modifiers), isFinal(modifiers)));
 
         }
 
@@ -64,6 +65,16 @@ public class ClassMemberMapperUtil {
         } else {
             return "package";
         }
+    }
+
+    private static Parameter[] getParameters(java.lang.reflect.Parameter[] parameters) {
+        List<Parameter> result = new ArrayList<>(parameters.length);
+
+        for(java.lang.reflect.Parameter parameter : parameters) {
+            result.add(new Parameter(parameter.getName(), parameter.getType().getSimpleName()));
+        }
+
+        return result.toArray(new Parameter[result.size()]);
     }
 
     private static boolean isFinal(String modifiers) {

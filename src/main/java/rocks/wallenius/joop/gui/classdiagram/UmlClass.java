@@ -8,7 +8,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -109,7 +108,7 @@ public class UmlClass extends VBox {
 
         for(Field field : fields) {
             Text text = new Text();
-            text.setText(String.format("%s %s : %s", getAccessModifierSymbol(field.getAccessModifier()), field.isFinal() ? field.getName().toUpperCase() : field.getName(), field.getType()));
+            text.setText(String.format("%s %s: %s", getAccessModifierSymbol(field.getAccessModifier()), field.isFinal() ? field.getName().toUpperCase() : field.getName(), field.getType()));
             text.setFont(Font.font(null, FontPosture.REGULAR, 10));
             if(field.isStatic()) {
                 text.setUnderline(true);
@@ -127,14 +126,14 @@ public class UmlClass extends VBox {
     private void drawConstructors() {
         VBox constructorsHolder = new VBox();
         constructorsHolder.setAlignment(Pos.BASELINE_LEFT);
-        constructorsHolder.setPadding(new Insets(0, 0, 10, 0));
+        constructorsHolder.setPadding(new Insets(0, 0, 0, 0));
 
 
         List<Text> c = new ArrayList<Text>();
 
         for(Constructor constructor : constructors) {
             Text text = new Text();
-            text.setText(String.format("%s %s()", getAccessModifierSymbol(constructor.getAccessModifier()), constructor.getName()));
+            text.setText(String.format("%s %s(%s)", getAccessModifierSymbol(constructor.getAccessModifier()), constructor.getName(), formatParameters(constructor.getParameters())));
             text.setFont(Font.font(null, FontWeight.BOLD, 10));
             c.add(text);
         }
@@ -156,7 +155,7 @@ public class UmlClass extends VBox {
 
         for(Method method : methods) {
             Text text = new Text();
-            text.setText(String.format("%s %s() : %s", getAccessModifierSymbol(method.getAccessModifier()), method.getName(), method.getReturnType()));
+            text.setText(String.format("%s %s(%s): %s", getAccessModifierSymbol(method.getAccessModifier()), method.getName(), formatParameters(method.getParameters()), method.getReturnType()));
             text.setFont(Font.font(null, FontWeight.BOLD, 10));
             if(method.isStatic()) {
                 text.setUnderline(true);
@@ -189,6 +188,22 @@ public class UmlClass extends VBox {
                 throw new IllegalArgumentException(String.format("Invalid accessModifier: %", accessModifier));
             }
         }
+    }
+
+    private static String formatParameters(Parameter[] parameters) {
+        StringBuilder sb = new StringBuilder();
+
+        int index = 0;
+
+        for(Parameter parameter : parameters) {
+            sb.append(parameter.getType());
+            index++;
+            if(index <= (parameters.length - 1)) {
+                sb.append(", ");
+            }
+        }
+
+        return sb.toString();
     }
 
 }
