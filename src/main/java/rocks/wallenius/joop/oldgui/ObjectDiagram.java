@@ -1,4 +1,4 @@
-package rocks.wallenius.joop.gui;
+package rocks.wallenius.joop.oldgui;
 
 /* 
 * ObjectDiagram.java

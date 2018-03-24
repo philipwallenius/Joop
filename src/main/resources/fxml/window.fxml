@@ -1,0 +1,27 @@
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.controlsfx.control.StatusBar?>
+<BorderPane fx:controller="rocks.wallenius.joop.gui.WindowController" xmlns:fx="http://javafx.com/fxml">
+    <top>
+        <VBox>
+            <fx:include source="menubar.fxml" fx:id="menubar" />
+            <fx:include source="toolbar.fxml" fx:id="toolbar" />
+        </VBox>
+    </top>
+    <center>
+        <SplitPane>
+            <TabPane fx:id="tabPane">
+            </TabPane>
+            <SplitPane orientation="VERTICAL">
+                <fx:include source="classdiagram.fxml" fx:id="classDiagram" />
+                <fx:include source="objectdiagram.fxml" fx:id="objectDiagram" />
+            </SplitPane>
+        </SplitPane>
+    </center>
+    <bottom>
+        <VBox fx:id="consoleAndStatusBarContainer">
+            <fx:include source="console.fxml" fx:id="console" />
+            <StatusBar fx:id="statusBar"/>
+        </VBox>
+    </bottom>
+</BorderPane>

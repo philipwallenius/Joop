@@ -10,9 +10,8 @@ package rocks.wallenius.joop.createdobject;
 * Author: Philip Wallenius, UNN-id: 09031635
 */ 
 
-import rocks.wallenius.joop.gui.MainCtrl;
-import rocks.wallenius.joop.gui.ObjectDiagram;
-import rocks.wallenius.joop.mvc.Observer;
+import rocks.wallenius.joop.oldgui.MainCtrl;
+import rocks.wallenius.joop.oldgui.ObjectDiagram;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;

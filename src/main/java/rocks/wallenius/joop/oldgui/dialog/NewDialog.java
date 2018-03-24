@@ -1,4 +1,4 @@
-package rocks.wallenius.joop.gui.dialog;
+package rocks.wallenius.joop.oldgui.dialog;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

@@ -1,4 +1,4 @@
-package rocks.wallenius.joop.controller;
+package rocks.wallenius.joop.gui;
 
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
@@ -10,46 +10,33 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.controlsfx.control.StatusBar;
-import org.fxmisc.richtext.StyleClassedTextArea;
 import rocks.wallenius.joop.compiler.CompilationException;
-import rocks.wallenius.joop.gui.dialog.NewDialog;
-import rocks.wallenius.joop.gui.syntaxhighlight.SyntaxHighlighter;
+import rocks.wallenius.joop.controller.MainController;
+import rocks.wallenius.joop.gui.classdiagram.ClassDiagramController;
+import rocks.wallenius.joop.gui.console.ConsoleController;
+import rocks.wallenius.joop.gui.objectdiagram.ObjectDiagramController;
+import rocks.wallenius.joop.oldgui.dialog.NewDialog;
+import rocks.wallenius.joop.oldgui.syntaxhighlight.SyntaxHighlighter;
+import rocks.wallenius.joop.gui.menubar.MenubarController;
 import rocks.wallenius.joop.model.entity.JoopClass;
 import rocks.wallenius.joop.model.entity.Tab;
+import rocks.wallenius.joop.gui.toolbar.ToolbarController;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * MVC GuiController
  * <p>
  * Created by philipwallenius on 14/02/16.
  */
-public class GuiController implements Initializable {
+public class WindowController implements Initializable {
 
     @FXML
     TabPane tabPane;
-
-    @FXML
-    Button buttonSave;
-
-    @FXML
-    Button buttonCompile;
-
-    @FXML
-    MenuItem menuItemSave;
-
-    @FXML
-    MenuItem menuItemCompile;
-
-    @FXML
-    CheckMenuItem menuItemConsole;
 
     @FXML
     StatusBar statusBar;
@@ -58,45 +45,44 @@ public class GuiController implements Initializable {
     VBox consoleAndStatusBarContainer;
 
     @FXML
+    MenubarController menubarController;
+
+    @FXML
+    ToolbarController toolbarController;
+
+    @FXML
     VBox console;
 
     @FXML
-    StackPane classView;
+    ConsoleController consoleController;
 
     @FXML
-    StackPane objectView;
+    ClassDiagramController classDiagramController;
 
     @FXML
-    StyleClassedTextArea consoleStyleClassedTextArea;
+    ObjectDiagramController objectDiagramController;
 
     private MainController mainController;
-
-    private ClassViewController classViewController;
-
-    private ObjectViewController objectViewController;
 
     private SyntaxHighlighter syntaxHighlighter;
 
     /**
      * MVC components instantiated from this constructor
      */
-    public GuiController() {
+    public WindowController() {
         syntaxHighlighter = new SyntaxHighlighter();
         List<JoopClass> classes = new ArrayList<JoopClass>();
         mainController = new MainController(classes);
-        classViewController = new ClassViewController(classes);
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        classViewController.setCanvas(classView);
-//        objectViewController.setCanvas(objectView);
-
-        buttonSave.setDisable(true);
-        buttonCompile.setDisable(true);
-        menuItemSave.setDisable(true);
-        menuItemCompile.setDisable(true);
+        menubarController.setParentController(this);
+        toolbarController.setParentController(this);
+        consoleController.setParentController(this);
+        classDiagramController.setParentController(this);
+        objectDiagramController.setParentController(this);
 
         setupGuiBindings();
 
@@ -109,15 +95,23 @@ public class GuiController implements Initializable {
      * Handler for open button events
      */
     @FXML
-    protected void open() {
+    public void open() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Class");
         FileChooser.ExtensionFilter extFilterSvg = new FileChooser.ExtensionFilter("Java files (*.java)", "*.java", "*.JAVA");
         fileChooser.getExtensionFilters().addAll(extFilterSvg);
         File file = fileChooser.showOpenDialog(tabPane.getScene().getWindow());
         if (file != null) {
+
+            String className = file.getName();
+
+            // standardize name
+            if (className.toLowerCase().endsWith(".java")) {
+                className = className.substring(0, className.lastIndexOf("."));
+            }
+
             try {
-                JoopClass loadedClass = mainController.openClass(file);
+                JoopClass loadedClass = mainController.openClass(className, file);
                 addTab(loadedClass);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -130,7 +124,7 @@ public class GuiController implements Initializable {
      * Handler for save button events
      */
     @FXML
-    protected void save() {
+    public void save() {
         saveClass(tabPane.getSelectionModel().getSelectedItem());
     }
 
@@ -151,21 +145,11 @@ public class GuiController implements Initializable {
         }
     }
 
-    @FXML
-    protected void closeConsole() {
-        menuItemConsole.setSelected(false);
-    }
-
-    @FXML
-    private void openConsole() {
-        menuItemConsole.setSelected(true);
-    }
-
     /**
      * Handler for compile Tab events
      */
     @FXML
-    protected void compileClasses() {
+    public void compileClasses() {
 
         boolean proceed = true;
         if(isUnsavedChanges()) {
@@ -180,25 +164,23 @@ public class GuiController implements Initializable {
 
         if(proceed) {
             statusBar.setText("Compiling...");
-            consoleStyleClassedTextArea.clear();
+            consoleController.clear();
 
             try {
 
                 mainController.compileClasses();
                 mainController.loadClasses();
-                classViewController.drawClassDiagram();
-
+                classDiagramController.draw();
                 statusBar.setText("Compilation completed successfully");
                 String msg = "Compilation completed successfully";
-                consoleStyleClassedTextArea.clear();
-                consoleStyleClassedTextArea.appendText(msg);
-                consoleStyleClassedTextArea.setStyleClass(0, msg.length(), "infoText");
+                consoleController.appendInfo(msg);
+
             } catch (CompilationException compilationException) {
-                openConsole();
-                consoleStyleClassedTextArea.clear();
-                consoleStyleClassedTextArea.appendText(compilationException.getCompilationExceptionMessage());
-                consoleStyleClassedTextArea.setStyleClass(0, compilationException.getCompilationExceptionMessage().length(), "exceptionText");
+
+                menubarController.openConsole();
+                consoleController.appendError(compilationException.getCompilationExceptionMessage());
                 statusBar.setText("Unable to compile classes");
+
             } catch (IOException ioException) {
                 new Alert(Alert.AlertType.ERROR, "Unable to compile classes").showAndWait();
                 statusBar.setText("Unable to compile classes");
@@ -214,7 +196,7 @@ public class GuiController implements Initializable {
      * Handler for new button events
      */
     @FXML
-    protected void create() {
+    public void create() {
         Optional<String> input = promptClassName();
 
         if (input.isPresent()) {
@@ -238,11 +220,13 @@ public class GuiController implements Initializable {
         }
     }
 
-    /**
-     * Handler for application exit
-     */
     @FXML
-    protected void exitApplication() {
+    public void closeConsole() {
+        menubarController.closeConsole();
+    }
+
+    @FXML
+    public void exitApplication() {
         Platform.exit();
     }
 
@@ -277,16 +261,16 @@ public class GuiController implements Initializable {
         // enable/disable Compile-button depending on if there are open tabs in the view
         tabPane.getTabs().addListener((ListChangeListener<javafx.scene.control.Tab>) c -> {
             if (tabPane.getTabs().size() > 0) {
-                buttonCompile.setDisable(false);
-                menuItemCompile.setDisable(false);
+                toolbarController.getButtonCompile().setDisable(false);
+                menubarController.getMenuItemCompile().setDisable(false);
             } else {
-                buttonCompile.setDisable(true);
-                menuItemCompile.setDisable(true);
+                toolbarController.getButtonCompile().setDisable(true);
+                menubarController.getMenuItemCompile().setDisable(true);
             }
         });
 
         // toggle console window depending on View menu Console item
-        menuItemConsole.selectedProperty().addListener((observable, oldValue, newValue) -> {
+        menubarController.getMenuItemConsole().selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 consoleAndStatusBarContainer.getChildren().add(0, console);
             } else {
@@ -345,17 +329,21 @@ public class GuiController implements Initializable {
      * @param tab to listen for changes in
      */
     private void bindClassChangesToButtons(rocks.wallenius.joop.model.entity.Tab tab) {
-        buttonSave.setDisable(!tab.getChanged());
-        menuItemSave.setDisable(!tab.getChanged());
+        toolbarController.getButtonSave().setDisable(!tab.getChanged());
+        menubarController.getMenuItemSave().setDisable(!tab.getChanged());
 
         tab.changedProperty().addListener((observable, oldValue, newValue) -> {
-            buttonSave.setDisable(!newValue);
-            menuItemSave.setDisable(!newValue);
+            toolbarController.getButtonSave().setDisable(!newValue);
+            menubarController.getMenuItemSave().setDisable(!newValue);
         });
     }
 
     public void stop() {
         syntaxHighlighter.stop();
+    }
+
+    public List<JoopClass> getClasses() {
+        return mainController.getClasses();
     }
 
 }

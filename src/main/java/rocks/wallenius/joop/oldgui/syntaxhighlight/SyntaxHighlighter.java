@@ -1,4 +1,4 @@
-package rocks.wallenius.joop.gui.syntaxhighlight;
+package rocks.wallenius.joop.oldgui.syntaxhighlight;
 
 import javafx.concurrent.Task;
 import org.fxmisc.richtext.CodeArea;

@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * Created by philipwallenius on 23/05/2016.
  */
-class MainController {
+public class MainController {
 
     private final static String CONF_KEY_SOURCES_DIR = "sources.directory";
     private final static String CONF_KEY_COMPILATION_DIR = "compilation.directory";
@@ -27,7 +27,7 @@ class MainController {
     private static ConfigurationService config;
     private List<JoopClass> classes;
 
-    MainController(List<JoopClass> classes) {
+    public MainController(List<JoopClass> classes) {
         config = ConfigurationService.getInstance();
         this.classes = classes;
     }
@@ -39,8 +39,9 @@ class MainController {
      * @throws IOException
      * @throws URISyntaxException
      */
-    JoopClass createClass(String fullyQualifiedName) throws IOException, URISyntaxException {
+    public JoopClass createClass(String fullyQualifiedName) throws IOException, URISyntaxException {
         String className = fullyQualifiedName;
+
         if(fullyQualifiedName.contains(".")) {
             className = fullyQualifiedName.substring(fullyQualifiedName.lastIndexOf(".") + 1);
         }
@@ -58,16 +59,9 @@ class MainController {
      * @param file to open class from
      * @throws IOException
      */
-    JoopClass openClass(File file) throws IOException {
+    public JoopClass openClass(String className, File file) throws IOException {
 
         String classDefinition = ClassFileUtils.loadClass(file);
-
-        String className = file.getName();
-
-        // standardize the name of the new class
-        if (className.toLowerCase().endsWith(".java")) {
-            className = className.substring(0, className.lastIndexOf("."));
-        }
 
         String fullyQualifiedName = ClassFileUtils.getFullyQualifiedName(className, classDefinition);
 
@@ -78,33 +72,22 @@ class MainController {
 
     }
 
-    void saveClass(String fullyQualifiedName, String definition) throws IOException {
+    public void saveClass(String fullyQualifiedName, String definition) throws IOException {
         JoopClass clazz = getClass(fullyQualifiedName);
         clazz.setDefinition(definition);
         ClassFileUtils.saveClass(clazz);
     }
 
-    void closeClass(String fullyQualifiedName) {
+    public void closeClass(String fullyQualifiedName) {
         JoopClass clazz = getClass(fullyQualifiedName);
         classes.remove(clazz);
     }
-
-    private JoopClass getClass(String fullyQualifiedName) {
-        JoopClass result = null;
-        for(JoopClass clazz : classes) {
-            if(clazz.getFullyQualifiedName().equals(fullyQualifiedName)) {
-                result = clazz;
-            }
-        }
-        return result;
-    }
-
     /**
      * Compiles classes
      * @throws CompilationException
      * @throws IOException
      */
-    void compileClasses() throws CompilationException, IOException, ClassNotFoundException {
+    public void compileClasses() throws CompilationException, IOException, ClassNotFoundException {
 
         if(classes.size() > 0) {
             List<File> fileList = classes.stream()
@@ -119,7 +102,7 @@ class MainController {
     /**
      * Loads compiled classes dynamically
      */
-    void loadClasses() throws MalformedURLException, ClassNotFoundException {
+    public void loadClasses() throws MalformedURLException, ClassNotFoundException {
         for(JoopClass clazz : classes) {
 
             URL[] urls = new URL[] { new URL("file:" + config.getString(CONF_KEY_COMPILATION_DIR)) };
@@ -131,6 +114,20 @@ class MainController {
             clazz.setLoadedClass(loadedClass);
 
         }
+    }
+
+    private JoopClass getClass(String fullyQualifiedName) {
+        JoopClass result = null;
+        for(JoopClass clazz : classes) {
+            if(clazz.getFullyQualifiedName().equals(fullyQualifiedName)) {
+                result = clazz;
+            }
+        }
+        return result;
+    }
+
+    public List<JoopClass> getClasses() {
+        return classes;
     }
 
 }

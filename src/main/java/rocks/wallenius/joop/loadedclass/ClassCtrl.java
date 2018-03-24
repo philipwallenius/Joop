@@ -10,8 +10,8 @@ package rocks.wallenius.joop.loadedclass;
 * Author: Philip Wallenius, UNN-id: 09031635
 */ 
 
-import rocks.wallenius.joop.gui.MainCtrl;
-import rocks.wallenius.joop.gui.ClassDiagram;
+import rocks.wallenius.joop.oldgui.MainCtrl;
+import rocks.wallenius.joop.oldgui.ClassDiagram;
 
 public class ClassCtrl {
 	

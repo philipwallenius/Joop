@@ -1,4 +1,4 @@
-package rocks.wallenius.joop.gui;
+package rocks.wallenius.joop.oldgui;
 
 /* 
 * JoopDriver.java
@@ -8,13 +8,7 @@ package rocks.wallenius.joop.gui;
 * 12/02/2012 
 * 
 * Author: Philip Wallenius, UNN-id: 09031635
-*/ 
-
-import javax.swing.JFrame;
-
-import rocks.wallenius.joop.code.*;
-import rocks.wallenius.joop.loadedclass.*;
-import rocks.wallenius.joop.createdobject.*;
+*/
 
 public class JoopDriver {
 //	public static void main(String[] args) {
