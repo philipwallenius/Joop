@@ -5,6 +5,9 @@ import javafx.geometry.Pos;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -22,7 +25,8 @@ public class UmlClass extends VBox {
     private StackPane propertiesBox;
     private StackPane methodsBox;
 
-    private final static int DEFAULT_WIDTH = 140;
+    private final static int MIN_HEIGHT = 80;
+    private final static int MIN_WIDTH = 100;
 
     private String title;
     private Field[] fields;
@@ -40,6 +44,7 @@ public class UmlClass extends VBox {
 
         initializeShape();
         initializeContent();
+
     }
 
     private void initializeShape() {
@@ -48,6 +53,9 @@ public class UmlClass extends VBox {
         methodsBox = new StackPane();
 
         setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderStroke.THIN)));
+        setPadding(new Insets(10, 10, 10, 10));
+        setMinWidth(MIN_WIDTH);
+        setMinHeight(MIN_HEIGHT);
 
         DropShadow dropShadow = new DropShadow();
         dropShadow.setRadius(0);
@@ -55,6 +63,11 @@ public class UmlClass extends VBox {
         dropShadow.setOffsetY(3.0);
         dropShadow.setColor(Color.web("#888888"));
         setEffect(dropShadow);
+
+        Stop[] stops = new Stop[] { new Stop(0, Color.web("#ff7075")), new Stop(1, Color.web("#ff6f74"))};
+        LinearGradient lg1 = new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE, stops);
+        Background bg = new Background(new BackgroundFill(lg1, null, null));
+        setBackground(bg);
 
         getChildren().addAll(titleBox, propertiesBox, methodsBox);
     }
@@ -66,22 +79,24 @@ public class UmlClass extends VBox {
     }
 
     private void drawTitle() {
-        Rectangle titleContainer = new Rectangle();
-        titleContainer.setWidth(DEFAULT_WIDTH);
-        titleContainer.setHeight(20);
-        titleContainer.setStroke(Color.BLACK);
-        titleContainer.setFill(Color.web("#FFFFF0"));
+
+        VBox titleHolder = new VBox();
+        titleHolder.setAlignment(Pos.BASELINE_CENTER);
+        titleHolder.setPadding(new Insets(0, 0, 10, 0));
 
         Text text = new Text();
         text.setText(title);
         text.setFont(Font.font(null, FontWeight.BOLD, 14));
-        titleBox.getChildren().addAll(titleContainer, text);
+
+        titleHolder.getChildren().addAll(text);
+
+        titleBox.getChildren().addAll(titleHolder);
     }
 
     private void drawFields() {
         VBox propertiesHolder = new VBox();
         propertiesHolder.setAlignment(Pos.BASELINE_LEFT);
-        propertiesHolder.setPadding(new Insets(5, 0, 0, 10));
+        propertiesHolder.setPadding(new Insets(0, 0, 10, 0));
 
 
 
@@ -98,9 +113,6 @@ public class UmlClass extends VBox {
         }
 
         Rectangle fieldsContainer = new Rectangle();
-        fieldsContainer.setWidth(DEFAULT_WIDTH);
-        fieldsContainer.setHeight(20 * fields.length);
-        fieldsContainer.setStroke(Color.BLACK);
         fieldsContainer.setFill(Color.web("#FFFFF0"));
         propertiesBox.getChildren().addAll(fieldsContainer);
 
@@ -114,7 +126,7 @@ public class UmlClass extends VBox {
     private void drawMethods() {
         VBox methodsHolder = new VBox();
         methodsHolder.setAlignment(Pos.BASELINE_LEFT);
-        methodsHolder.setPadding(new Insets(5, 0, 0, 10));
+        methodsHolder.setPadding(new Insets(0, 0, 0, 0));
 
 
         List<Text> m = new ArrayList<Text>();
@@ -127,9 +139,6 @@ public class UmlClass extends VBox {
         }
 
         Rectangle methodsContainer = new Rectangle();
-        methodsContainer.setWidth(DEFAULT_WIDTH);
-        methodsContainer.setHeight(20 * methods.length);
-        methodsContainer.setStroke(Color.BLACK);
         methodsContainer.setFill(Color.web("#FFFFF0"));
         methodsBox.getChildren().addAll(methodsContainer);
 
