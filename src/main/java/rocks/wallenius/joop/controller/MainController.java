@@ -16,6 +16,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,13 +29,16 @@ public class MainController {
     private final static String CONF_KEY_COMPILATION_DIR = "compilation.directory";
 
     private static ConfigurationService config;
-    private List<JoopClass> classes;
+    private List<JoopClass> joopClasses;
+
+    private List<Class> classes;
     private List<JoopObject> objects;
 
-    public MainController(List<JoopClass> classes, List<JoopObject> objects) {
-        config = ConfigurationService.getInstance();
+    public MainController(List<Class> classes, List<JoopObject> objects) {
         this.classes = classes;
         this.objects = objects;
+        config = ConfigurationService.getInstance();
+        joopClasses = new ArrayList<>();
     }
 
     /**
@@ -54,7 +58,7 @@ public class MainController {
         Path path = new File(String.format("%s%s.java", config.getString(CONF_KEY_SOURCES_DIR), className)).toPath();
         JoopClass newClass = new JoopClass(fullyQualifiedName, path);
         newClass.setDefinition(ClassFileUtils.loadClassTemplate(fullyQualifiedName));
-        classes.add(newClass);
+        joopClasses.add(newClass);
         return newClass;
 
     }
@@ -72,7 +76,7 @@ public class MainController {
 
         JoopClass openedClass = new JoopClass(fullyQualifiedName, file.toPath());
         openedClass.setDefinition(classDefinition);
-        classes.add(openedClass);
+        joopClasses.add(openedClass);
         return openedClass;
 
     }
@@ -84,18 +88,21 @@ public class MainController {
     }
 
     public void closeClass(String fullyQualifiedName) {
-        JoopClass clazz = getClass(fullyQualifiedName);
-        classes.remove(clazz);
+        final JoopClass clazz = getClass(fullyQualifiedName);
+        classes.removeIf(aClass -> aClass == clazz.getLoadedClass());
+        Class c = clazz.getLoadedClass();
+        objects.removeIf(joopObject -> joopObject.getObject().getClass() == c);
+        joopClasses.remove(clazz);
     }
     /**
-     * Compiles classes
+     * Compiles joopClasses
      * @throws CompilationException
      * @throws IOException
      */
     public void compileClasses() throws CompilationException, IOException, ClassNotFoundException {
 
-        if(classes.size() > 0) {
-            List<File> fileList = classes.stream()
+        if(joopClasses.size() > 0) {
+            List<File> fileList = joopClasses.stream()
                     .map(JoopClass::getPath)
                     .map(Path::toFile)
                     .collect(Collectors.toList());
@@ -105,10 +112,11 @@ public class MainController {
     }
 
     /**
-     * Loads compiled classes dynamically
+     * Loads compiled joopClasses dynamically
      */
     public void loadClasses() throws MalformedURLException, ClassNotFoundException {
-        for(JoopClass clazz : classes) {
+        classes.clear();
+        for(JoopClass clazz : joopClasses) {
 
             URL[] urls = new URL[] { new URL("file:" + config.getString(CONF_KEY_COMPILATION_DIR)) };
             //Create a new URLClassLoader with url to directory
@@ -117,20 +125,14 @@ public class MainController {
             //Load the class and return it
             Class loadedClass = classLoader.loadClass(clazz.getNameWithoutFileExtension());
             clazz.setLoadedClass(loadedClass);
-
+            classes.add(loadedClass);
         }
     }
 
-    public List<JoopClass> getClasses() {
-        return classes;
-    }
-
-    public List<JoopObject> getObjects() { return objects; }
-
-    public void invokeConstructor(JoopClass clazz, String instanceName, Class[] parameters, Object[] arguments) {
+    public void invokeConstructor(Class clazz, String instanceName, Class[] parameters, Object[] arguments) {
 
         try {
-            Constructor constructor = clazz.getLoadedClass().getConstructor(parameters);
+            Constructor constructor = clazz.getConstructor(parameters);
             Object instance = constructor.newInstance(arguments);
             objects.add(new JoopObject(instanceName, instance));
         } catch (NoSuchMethodException e) {
@@ -147,7 +149,7 @@ public class MainController {
 
     private JoopClass getClass(String fullyQualifiedName) {
         JoopClass result = null;
-        for(JoopClass clazz : classes) {
+        for(JoopClass clazz : joopClasses) {
             if(clazz.getFullyQualifiedName().equals(fullyQualifiedName)) {
                 result = clazz;
             }

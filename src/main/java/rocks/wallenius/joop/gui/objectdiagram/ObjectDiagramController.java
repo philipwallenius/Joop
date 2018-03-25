@@ -51,7 +51,7 @@ public class ObjectDiagramController implements Initializable {
 
         for(JoopObject object : objects){
 
-            final UmlObject umlObject = new UmlObject(x, y, object.getInstanceName());
+            final UmlObject umlObject = new UmlObject(x, y, object.getObject().getClass().getSimpleName(), object.getInstanceName());
             // ContextMenu contextMenu = createContextMenu(object);
 
 //            umlObject.setOnContextMenuRequested(event -> {

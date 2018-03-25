@@ -56,18 +56,19 @@ public class NewObjectDialog extends Dialog<NewObject> {
 
         ButtonType buttonTypeOk = new ButtonType("Create", ButtonBar.ButtonData.OK_DONE);
         getDialogPane().getButtonTypes().add(buttonTypeOk);
+
         setResultConverter(button -> {
             if (button == buttonTypeOk) {
 
                 String instanceName = instanceNameTxt.getText().trim();
-                Map<Class, Object> arguments = new LinkedHashMap<>();
+                List<Object> arguments = new ArrayList<>();
 
                 for(int i = 0; i < parameters.length; i++) {
                     TextField input = inputs.get(i);
-                    arguments.put(parameters[i], castArgument(parameters[i], input.getText()));
+                    arguments.add(castArgument(parameters[i], input.getText()));
                 }
 
-                return new NewObject(instanceName, arguments);
+                return new NewObject(instanceName, Arrays.asList(parameters), arguments);
             }
             return null;
         });

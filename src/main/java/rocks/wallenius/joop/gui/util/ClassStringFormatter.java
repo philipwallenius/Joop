@@ -15,7 +15,7 @@ public class ClassStringFormatter {
         int index = 0;
 
         for(Parameter parameter : parameters) {
-            sb.append(parameter.getType());
+            sb.append(parameter.getType().getSimpleName());
             index++;
             if(index <= (parameters.length - 1)) {
                 sb.append(", ");

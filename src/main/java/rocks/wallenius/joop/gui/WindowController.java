@@ -1,6 +1,9 @@
 package rocks.wallenius.joop.gui;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -18,6 +21,7 @@ import rocks.wallenius.joop.gui.tabs.TabsController;
 import rocks.wallenius.joop.gui.dialog.NewClassDialog;
 import rocks.wallenius.joop.gui.menubar.MenubarController;
 import rocks.wallenius.joop.model.entity.JoopClass;
+import rocks.wallenius.joop.model.entity.JoopObject;
 import rocks.wallenius.joop.model.entity.Tab;
 import rocks.wallenius.joop.gui.toolbar.ToolbarController;
 
@@ -63,8 +67,14 @@ public class WindowController implements Initializable {
 
     private MainController mainController;
 
+    private ObservableList<Class> classes;
+    private ObservableList<JoopObject> objects;
+
+
     public WindowController() {
-        mainController = new MainController(new ArrayList<>(), new ArrayList<>());
+        classes = FXCollections.observableArrayList();
+        objects = FXCollections.observableArrayList();
+        mainController = new MainController(classes, objects);
     }
 
     @Override
@@ -81,6 +91,7 @@ public class WindowController implements Initializable {
         consoleAndStatusBarContainer.getChildren().remove(console);
 
         setupUiBindings();
+        setupDiagramBindings();
     }
 
     /**
@@ -162,10 +173,6 @@ public class WindowController implements Initializable {
                 mainController.compileClasses();
                 mainController.loadClasses();
 
-                classDiagramController.clear();
-                classDiagramController.addClasses(getClasses());
-                // classDiagramController.draw();
-
                 statusBar.setText("Compilation completed successfully");
                 String msg = "Compilation completed successfully";
                 consoleController.appendInfo(msg);
@@ -232,10 +239,6 @@ public class WindowController implements Initializable {
         tabsController.stop();
     }
 
-    public List<JoopClass> getClasses() {
-        return mainController.getClasses();
-    }
-
     public MenubarController getMenubarController() {
         return menubarController;
     }
@@ -244,10 +247,8 @@ public class WindowController implements Initializable {
         return toolbarController;
     }
 
-    public void invokeConstructor(JoopClass clazz, String instanceName, Class[] parameters, Object[] arguments) {
+    public void invokeConstructor(Class clazz, String instanceName, Class[] parameters, Object[] arguments) {
         mainController.invokeConstructor(clazz, instanceName, parameters, arguments);
-        objectDiagramController.clear();
-        objectDiagramController.addObjects(mainController.getObjects());
     }
 
     private Window getWindow() {
@@ -271,6 +272,17 @@ public class WindowController implements Initializable {
             } else {
                 consoleAndStatusBarContainer.getChildren().remove(console);
             }
+        });
+    }
+
+    private void setupDiagramBindings() {
+        classes.addListener((ListChangeListener<Class>) c -> {
+            classDiagramController.clear();
+            classDiagramController.addClasses(classes);
+        });
+        objects.addListener((ListChangeListener<JoopObject>) c -> {
+            objectDiagramController.clear();
+            objectDiagramController.addObjects(objects);
         });
     }
 }
