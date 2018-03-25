@@ -4,4 +4,4 @@
 
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
-           fx:controller="rocks.wallenius.joop.gui.objectdiagram.ObjectDiagramController" fx:id="objectView" styleClass="object-view"/>
+           fx:controller="rocks.wallenius.joop.gui.objectdiagram.ObjectDiagramController" fx:id="diagram" styleClass="object-view"/>

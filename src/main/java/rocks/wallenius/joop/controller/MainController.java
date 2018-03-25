@@ -4,10 +4,13 @@ import rocks.wallenius.joop.compiler.CompilationException;
 import rocks.wallenius.joop.compiler.CompilerUtil;
 import rocks.wallenius.joop.configuration.ConfigurationService;
 import rocks.wallenius.joop.model.entity.JoopClass;
+import rocks.wallenius.joop.model.entity.JoopObject;
 import rocks.wallenius.joop.util.ClassFileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -26,11 +29,12 @@ public class MainController {
 
     private static ConfigurationService config;
     private List<JoopClass> classes;
-    private List<Object> objects;
+    private List<JoopObject> objects;
 
-    public MainController(List<JoopClass> classes) {
+    public MainController(List<JoopClass> classes, List<JoopObject> objects) {
         config = ConfigurationService.getInstance();
         this.classes = classes;
+        this.objects = objects;
     }
 
     /**
@@ -121,9 +125,23 @@ public class MainController {
         return classes;
     }
 
-    public List<Object> getObjects() { return objects; }
+    public List<JoopObject> getObjects() { return objects; }
 
-    public void invokeConstructor(Class[] parameters, Object[] arguments) {
+    public void invokeConstructor(JoopClass clazz, String instanceName, Class[] parameters, Object[] arguments) {
+
+        try {
+            Constructor constructor = clazz.getLoadedClass().getConstructor(parameters);
+            Object instance = constructor.newInstance(arguments);
+            objects.add(new JoopObject(instanceName, instance));
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
 
     }
 

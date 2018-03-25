@@ -15,7 +15,7 @@ import rocks.wallenius.joop.gui.classdiagram.ClassDiagramController;
 import rocks.wallenius.joop.gui.console.ConsoleController;
 import rocks.wallenius.joop.gui.objectdiagram.ObjectDiagramController;
 import rocks.wallenius.joop.gui.tabs.TabsController;
-import rocks.wallenius.joop.oldgui.dialog.NewDialog;
+import rocks.wallenius.joop.gui.dialog.NewClassDialog;
 import rocks.wallenius.joop.gui.menubar.MenubarController;
 import rocks.wallenius.joop.model.entity.JoopClass;
 import rocks.wallenius.joop.model.entity.Tab;
@@ -23,11 +23,9 @@ import rocks.wallenius.joop.gui.toolbar.ToolbarController;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * MVC GuiController
@@ -66,7 +64,7 @@ public class WindowController implements Initializable {
     private MainController mainController;
 
     public WindowController() {
-        mainController = new MainController(new ArrayList<>());
+        mainController = new MainController(new ArrayList<>(), new ArrayList<>());
     }
 
     @Override
@@ -246,22 +244,10 @@ public class WindowController implements Initializable {
         return toolbarController;
     }
 
-    public void invokeConstructor(Class[] parameters, Object[] arguments) {
-
-        mainController.invokeConstructor(parameters, arguments);
-
-//        Optional<JoopClass> joop = mainController.getClasses().stream().filter(joopClass -> joopClass.getFullyQualifiedName().equals(name)).findAny();
-//        if(joop.isPresent()) {
-//            Class clazz = joop.get().getLoadedClass();
-//            try {
-//                Constructor constructor = clazz.getConstructor(parameters);
-//                Object instance = constructor.newInstance(arguments);
-//
-//            } catch(Exception ex) {
-//                System.out.println("Method not found: " + ex.getMessage());
-//            }
-//        }
-
+    public void invokeConstructor(JoopClass clazz, String instanceName, Class[] parameters, Object[] arguments) {
+        mainController.invokeConstructor(clazz, instanceName, parameters, arguments);
+        objectDiagramController.clear();
+        objectDiagramController.addObjects(mainController.getObjects());
     }
 
     private Window getWindow() {
@@ -269,8 +255,8 @@ public class WindowController implements Initializable {
     }
 
     private Optional<String> promptClassName() {
-        NewDialog newDialog = new NewDialog((Stage) getWindow());
-        return newDialog.getValue();
+        NewClassDialog newClassDialog = new NewClassDialog((Stage) getWindow());
+        return newClassDialog.getValue();
     }
 
     private Optional<ButtonType> promptUnsavedChanges() {

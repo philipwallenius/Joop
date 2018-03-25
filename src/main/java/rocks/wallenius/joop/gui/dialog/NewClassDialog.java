@@ -1,4 +1,4 @@
-package rocks.wallenius.joop.oldgui.dialog;
+package rocks.wallenius.joop.gui.dialog;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -22,7 +22,7 @@ import java.util.Optional;
 /**
  * Created by philipwallenius on 15/02/16.
  */
-public class NewDialog extends Stage {
+public class NewClassDialog extends Stage {
 
     private final static String DIALOG_TITLE = "Create New Class";
     private final static String DIALOG_INVALID_CLASS_NAME_ERROR = "Invalid class name";
@@ -35,7 +35,7 @@ public class NewDialog extends Stage {
     private Button buttonOK, buttonCancel;
     private boolean cancelled;
 
-    public NewDialog(Stage parentStage) {
+    public NewClassDialog(Stage parentStage) {
         super();
         this.parentStage = parentStage;
         initialize();

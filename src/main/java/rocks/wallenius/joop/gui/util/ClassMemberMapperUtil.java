@@ -71,7 +71,7 @@ public class ClassMemberMapperUtil {
         List<Parameter> result = new ArrayList<>(parameters.length);
 
         for(java.lang.reflect.Parameter parameter : parameters) {
-            result.add(new Parameter(parameter.getName(), parameter.getType().getSimpleName()));
+            result.add(new Parameter(parameter.getName(), parameter.getType()));
         }
 
         return result.toArray(new Parameter[result.size()]);

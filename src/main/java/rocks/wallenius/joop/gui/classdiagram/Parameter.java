@@ -6,9 +6,9 @@ package rocks.wallenius.joop.gui.classdiagram;
 public class Parameter {
 
     private String name;
-    private String type;
+    private Class type;
 
-    public Parameter(String name, String type) {
+    public Parameter(String name, Class type) {
         this.name = name;
         this.type = type;
     }
@@ -17,8 +17,12 @@ public class Parameter {
         return name;
     }
 
-    public String getType() {
+    public Class getType() {
         return type;
+    }
+
+    public String getTypeSimpleName() {
+        return type.getSimpleName();
     }
 
 }
