@@ -91,7 +91,7 @@ public class MainController {
         final JoopClass clazz = getClass(fullyQualifiedName);
         classes.removeIf(aClass -> aClass == clazz.getLoadedClass());
         Class c = clazz.getLoadedClass();
-        objects.removeIf(joopObject -> joopObject.getObject().getClass() == c);
+        objects.removeIf(joopObject -> joopObject.getObject().getClass().equals(c));
         joopClasses.remove(clazz);
     }
     /**
