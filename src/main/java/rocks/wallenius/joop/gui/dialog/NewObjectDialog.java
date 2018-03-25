@@ -59,7 +59,7 @@ public class NewObjectDialog extends Dialog<NewObject> {
         setResultConverter(button -> {
             if (button == buttonTypeOk) {
 
-                String instanceName = instanceNameTxt.getText();
+                String instanceName = instanceNameTxt.getText().trim();
                 Map<Class, Object> arguments = new LinkedHashMap<>();
 
                 for(int i = 0; i < parameters.length; i++) {
@@ -75,12 +75,25 @@ public class NewObjectDialog extends Dialog<NewObject> {
 
     private Object castArgument(Class type, String value) {
         Object result;
+        value = value.trim();
         if(type == String.class) {
             result = value;
         } else if(type == int.class) {
             result = Integer.parseInt(value);
         } else if(type == double.class) {
             result = Double.parseDouble(value);
+        } else if(type == float.class) {
+            result = Float.parseFloat(value);
+        } else if(type == char.class) {
+            result = value.charAt(0);
+        } else if(type == byte.class) {
+            result = Byte.valueOf(value);
+        } else if(type == short.class) {
+            result = Short.valueOf(value);
+        } else if(type == long.class) {
+            result = Long.valueOf(value);
+        } else if(type == boolean.class) {
+            result = Boolean.valueOf(value);
         } else {
             throw new ClassCastException(String.format("Invalid argument value for %s: %s", type.getSimpleName(), value));
         }
