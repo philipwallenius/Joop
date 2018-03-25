@@ -26,6 +26,7 @@ public class MainController {
 
     private static ConfigurationService config;
     private List<JoopClass> classes;
+    private List<Object> objects;
 
     public MainController(List<JoopClass> classes) {
         config = ConfigurationService.getInstance();
@@ -116,6 +117,16 @@ public class MainController {
         }
     }
 
+    public List<JoopClass> getClasses() {
+        return classes;
+    }
+
+    public List<Object> getObjects() { return objects; }
+
+    public void invokeConstructor(Class[] parameters, Object[] arguments) {
+
+    }
+
     private JoopClass getClass(String fullyQualifiedName) {
         JoopClass result = null;
         for(JoopClass clazz : classes) {
@@ -124,10 +135,6 @@ public class MainController {
             }
         }
         return result;
-    }
-
-    public List<JoopClass> getClasses() {
-        return classes;
     }
 
 }

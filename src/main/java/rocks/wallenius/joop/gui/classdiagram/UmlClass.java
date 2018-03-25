@@ -12,6 +12,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import rocks.wallenius.joop.gui.util.ClassStringFormatter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,7 +69,7 @@ public class UmlClass extends VBox {
         dropShadow.setColor(Color.web("#888888"));
         setEffect(dropShadow);
 
-        Stop[] stops = new Stop[] { new Stop(0, Color.web("#ff7075")), new Stop(1, Color.web("#ff6f74"))};
+        Stop[] stops = new Stop[] { new Stop(0, Color.web("#92cff6")), new Stop(1, Color.web("#85cbf8"))};
         LinearGradient lg1 = new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE, stops);
         Background bg = new Background(new BackgroundFill(lg1, null, null));
         setBackground(bg);
@@ -133,7 +135,7 @@ public class UmlClass extends VBox {
 
         for(Constructor constructor : constructors) {
             Text text = new Text();
-            text.setText(String.format("%s %s(%s)", getAccessModifierSymbol(constructor.getAccessModifier()), constructor.getName(), formatParameters(constructor.getParameters())));
+            text.setText(String.format("%s %s(%s)", getAccessModifierSymbol(constructor.getAccessModifier()), constructor.getName(), ClassStringFormatter.formatParameters(constructor.getParameters())));
             text.setFont(Font.font(null, FontWeight.BOLD, 10));
             c.add(text);
         }
@@ -155,7 +157,7 @@ public class UmlClass extends VBox {
 
         for(Method method : methods) {
             Text text = new Text();
-            text.setText(String.format("%s %s(%s): %s", getAccessModifierSymbol(method.getAccessModifier()), method.getName(), formatParameters(method.getParameters()), method.getReturnType()));
+            text.setText(String.format("%s %s(%s): %s", getAccessModifierSymbol(method.getAccessModifier()), method.getName(), ClassStringFormatter.formatParameters(method.getParameters()), method.getReturnType()));
             text.setFont(Font.font(null, FontWeight.BOLD, 10));
             if(method.isStatic()) {
                 text.setUnderline(true);
@@ -188,22 +190,6 @@ public class UmlClass extends VBox {
                 throw new IllegalArgumentException(String.format("Invalid accessModifier: %", accessModifier));
             }
         }
-    }
-
-    private static String formatParameters(Parameter[] parameters) {
-        StringBuilder sb = new StringBuilder();
-
-        int index = 0;
-
-        for(Parameter parameter : parameters) {
-            sb.append(parameter.getType());
-            index++;
-            if(index <= (parameters.length - 1)) {
-                sb.append(", ");
-            }
-        }
-
-        return sb.toString();
     }
 
 }

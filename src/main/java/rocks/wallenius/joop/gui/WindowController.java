@@ -23,9 +23,11 @@ import rocks.wallenius.joop.gui.toolbar.ToolbarController;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * MVC GuiController
@@ -159,14 +161,16 @@ public class WindowController implements Initializable {
             consoleController.clear();
 
             try {
-
                 mainController.compileClasses();
                 mainController.loadClasses();
-                classDiagramController.draw();
+
+                classDiagramController.clear();
+                classDiagramController.addClasses(getClasses());
+                // classDiagramController.draw();
+
                 statusBar.setText("Compilation completed successfully");
                 String msg = "Compilation completed successfully";
                 consoleController.appendInfo(msg);
-
             } catch (CompilationException compilationException) {
 
                 menubarController.openConsole();
@@ -240,6 +244,24 @@ public class WindowController implements Initializable {
 
     public ToolbarController getToolbarController() {
         return toolbarController;
+    }
+
+    public void invokeConstructor(Class[] parameters, Object[] arguments) {
+
+        mainController.invokeConstructor(parameters, arguments);
+
+//        Optional<JoopClass> joop = mainController.getClasses().stream().filter(joopClass -> joopClass.getFullyQualifiedName().equals(name)).findAny();
+//        if(joop.isPresent()) {
+//            Class clazz = joop.get().getLoadedClass();
+//            try {
+//                Constructor constructor = clazz.getConstructor(parameters);
+//                Object instance = constructor.newInstance(arguments);
+//
+//            } catch(Exception ex) {
+//                System.out.println("Method not found: " + ex.getMessage());
+//            }
+//        }
+
     }
 
     private Window getWindow() {
