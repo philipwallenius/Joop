@@ -89,9 +89,8 @@ public class MainController {
 
     public void closeClass(String fullyQualifiedName) {
         final JoopClass clazz = getClass(fullyQualifiedName);
-        classes.removeIf(aClass -> aClass == clazz.getLoadedClass());
-        Class c = clazz.getLoadedClass();
-        objects.removeIf(joopObject -> joopObject.getObject().getClass().equals(c));
+        classes.removeIf(aClass -> aClass.getCanonicalName().equals(clazz.getFullyQualifiedName()));
+        objects.removeIf(joopObject -> joopObject.getFullyQualifiedClassName().equals(fullyQualifiedName));
         joopClasses.remove(clazz);
     }
     /**
@@ -134,7 +133,7 @@ public class MainController {
         try {
             Constructor constructor = clazz.getConstructor(parameters);
             Object instance = constructor.newInstance(arguments);
-            objects.add(new JoopObject(instanceName, instance));
+            objects.add(new JoopObject(clazz.getCanonicalName(), instanceName, instance));
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
