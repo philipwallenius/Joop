@@ -2,10 +2,11 @@ package rocks.wallenius.joop.gui.classdiagram;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
+import javafx.geometry.Insets;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.layout.StackPane;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.FlowPane;
 import rocks.wallenius.joop.gui.dialog.NewObject;
 import rocks.wallenius.joop.gui.dialog.NewObjectDialog;
 import rocks.wallenius.joop.gui.util.ClassMemberMapperUtil;
@@ -23,30 +24,28 @@ public class ClassDiagramController implements Initializable {
 
     private WindowController parentController;
 
-    private Group group;
-
     @FXML
-    StackPane diagram;
+    ScrollPane diagram;
+
+    FlowPane pane;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        group = new Group();
-        diagram.getChildren().add(group);
+        pane = new FlowPane();
+        pane.setHgap(20);
+        pane.setVgap(20);
+        pane.setPadding(new Insets(20, 20, 20, 20));
+        diagram.setContent(pane);
     }
 
     public void clear() {
-        group.getChildren().clear();
+        pane.getChildren().clear();
     }
 
     public void addClasses(List<Class> classes) {
-        List<UmlClass> umlClasses = new ArrayList<>();
-
-        int x = 0;
-        int y = 0;
 
         for(Class clazz : classes) {
-
-            final UmlClass umlClass = new UmlClass(x, y, clazz.getSimpleName(), ClassMemberMapperUtil.getFields(clazz), ClassMemberMapperUtil.getConstructors(clazz), ClassMemberMapperUtil.getMethods(clazz));
+            final UmlClass umlClass = new UmlClass(clazz.getSimpleName(), ClassMemberMapperUtil.getFields(clazz), ClassMemberMapperUtil.getConstructors(clazz), ClassMemberMapperUtil.getMethods(clazz));
             ContextMenu contextMenu = createContextMenu(clazz);
 
             umlClass.setOnContextMenuRequested(event -> {
@@ -54,11 +53,9 @@ public class ClassDiagramController implements Initializable {
                 contextMenu.show(umlClass, event.getScreenX(), event.getScreenY());
             });
 
-            umlClasses.add(umlClass);
-            x += 200;
+            pane.getChildren().add(umlClass);
         }
 
-        group.getChildren().addAll(umlClasses);
     }
 
     public void setParentController(WindowController parentController) {

@@ -2,18 +2,14 @@ package rocks.wallenius.joop.gui.objectdiagram;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.layout.StackPane;
+import javafx.geometry.Insets;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.FlowPane;
 import rocks.wallenius.joop.gui.WindowController;
-import rocks.wallenius.joop.gui.classdiagram.UmlClass;
 import rocks.wallenius.joop.gui.classdiagram.UmlObject;
-import rocks.wallenius.joop.gui.util.ClassMemberMapperUtil;
-import rocks.wallenius.joop.model.entity.JoopClass;
 import rocks.wallenius.joop.model.entity.JoopObject;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -24,15 +20,18 @@ public class ObjectDiagramController implements Initializable {
 
     private WindowController parentController;
 
-    private Group group;
-
     @FXML
-    StackPane diagram;
+    ScrollPane diagram;
+
+    FlowPane pane;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        group = new Group();
-        diagram.getChildren().add(group);
+        pane = new FlowPane();
+        pane.setHgap(20);
+        pane.setVgap(20);
+        pane.setPadding(new Insets(20, 20, 20, 20));
+        diagram.setContent(pane);
     }
 
     public void setParentController(WindowController parentController) {
@@ -40,18 +39,14 @@ public class ObjectDiagramController implements Initializable {
     }
 
     public void clear() {
-        group.getChildren().clear();
+        pane.getChildren().clear();
     }
 
     public void addObjects(List<JoopObject> objects) {
-        List<UmlObject> umlObjects = new ArrayList<>();
-
-        int x = 0;
-        int y = 0;
 
         for(JoopObject object : objects){
 
-            final UmlObject umlObject = new UmlObject(x, y, object.getObject().getClass().getSimpleName(), object.getInstanceName());
+            final UmlObject umlObject = new UmlObject(object.getObject().getClass().getSimpleName(), object.getInstanceName());
             // ContextMenu contextMenu = createContextMenu(object);
 
 //            umlObject.setOnContextMenuRequested(event -> {
@@ -59,11 +54,8 @@ public class ObjectDiagramController implements Initializable {
 //                contextMenu.show(umlObject, event.getScreenX(), event.getScreenY());
 //            });
 
-            umlObjects.add(umlObject);
-            x += 200;
+            pane.getChildren().add(umlObject);
         }
-
-        group.getChildren().addAll(umlObjects);
     }
 
 }

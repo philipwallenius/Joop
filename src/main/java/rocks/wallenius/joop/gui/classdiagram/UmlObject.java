@@ -25,12 +25,10 @@ public class UmlObject extends VBox {
     private String className;
     private String instanceName;
 
-    public UmlObject(int x, int y, String className, String instanceName) {
+    public UmlObject(String className, String instanceName) {
         super();
         this.className = className;
         this.instanceName = instanceName;
-        setLayoutX(x);
-        setLayoutY(y);
 
         initializeShape();
         initializeContent();

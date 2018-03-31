@@ -35,16 +35,13 @@ public class UmlClass extends VBox {
     private Constructor[] constructors;
     private Method[] methods;
 
-    public UmlClass(int x, int y, String title, Field[] fields, Constructor[] constructors, Method[] methods) {
+    public UmlClass(String title, Field[] fields, Constructor[] constructors, Method[] methods) {
         super();
 
         this.title = title;
         this.fields = fields;
         this.constructors = constructors;
         this.methods = methods;
-
-        setLayoutX(x);
-        setLayoutY(y);
 
         initializeShape();
         initializeContent();
