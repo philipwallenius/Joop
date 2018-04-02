@@ -75,9 +75,7 @@ public class ObjectDiagramController implements Initializable {
         for(Method method : ObjectUmlMapperUtil.getMethods(object)) {
 
             MenuItem item = new MenuItem(String.format("%s(%s)", method.getName(), ClassStringFormatter.formatParameters(method.getParameters())));
-            item.setOnAction(event -> {
-                invokeMethod(object, method);
-            });
+            item.setOnAction(event -> invokeMethod(object, method));
             menuItems.add(item);
 
         }
@@ -89,7 +87,6 @@ public class ObjectDiagramController implements Initializable {
     private void invokeMethod(Object object, Method method) {
 
         List<Class> params = Arrays.stream(method.getParameters()).map(rocks.wallenius.joop.gui.classdiagram.Parameter::getType).collect(Collectors.toList());
-
 
         MethodParameters methodParameters = null;
         if(params.size() > 0) {
@@ -114,9 +111,10 @@ public class ObjectDiagramController implements Initializable {
         Object returnValue = parentController.invokeMethod(object, method.getName(), parameters, arguments);
 
         if(returnValue != null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, String.format("Return value: %s", returnValue.toString()));
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, String.format("Method returned: %s", returnValue.toString()));
             alert.showAndWait();
         }
+
 
     }
 

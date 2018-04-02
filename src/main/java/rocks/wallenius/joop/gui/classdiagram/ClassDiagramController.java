@@ -69,9 +69,7 @@ public class ClassDiagramController implements Initializable {
         for(Constructor constructor : ClassUmlMapperUtil.getConstructors(clazz)) {
 
             MenuItem item = new MenuItem(String.format("%s(%s)", constructor.getName(), ClassStringFormatter.formatParameters(constructor.getParameters())));
-            item.setOnAction(event -> {
-                invokeConstructor(clazz, constructor);
-            });
+            item.setOnAction(event -> invokeConstructor(clazz, constructor));
             menuItems.add(item);
 
         }

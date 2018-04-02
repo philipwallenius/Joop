@@ -253,7 +253,9 @@ public class WindowController implements Initializable {
     }
 
     public Object invokeMethod(Object object, String methodName, Class[] parameters, Object[] arguments) {
-        return mainController.invokeMethod(object, methodName, parameters, arguments);
+        Object returnValue = mainController.invokeMethod(object, methodName, parameters, arguments);
+        updateObjectDiagram();
+        return returnValue;
     }
 
     private Window getWindow() {
@@ -282,13 +284,21 @@ public class WindowController implements Initializable {
 
     private void setupDiagramBindings() {
         classes.addListener((ListChangeListener<Class>) c -> {
-            classDiagramController.clear();
-            classDiagramController.addClasses(classes);
+            updateClassDiagram();
         });
         objects.addListener((ListChangeListener<JoopObject>) c -> {
-            objectDiagramController.clear();
-            objectDiagramController.addObjects(objects);
+            updateObjectDiagram();
         });
+    }
+
+    private void updateClassDiagram() {
+        classDiagramController.clear();
+        classDiagramController.addClasses(classes);
+    }
+
+    private void updateObjectDiagram() {
+        objectDiagramController.clear();
+        objectDiagramController.addObjects(objects);
     }
 
 }
