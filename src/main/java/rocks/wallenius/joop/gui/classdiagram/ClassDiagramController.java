@@ -9,7 +9,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
 import rocks.wallenius.joop.gui.dialog.NewObject;
 import rocks.wallenius.joop.gui.dialog.NewObjectDialog;
-import rocks.wallenius.joop.gui.util.ClassMemberMapperUtil;
+import rocks.wallenius.joop.gui.util.ClassUmlMapperUtil;
 import rocks.wallenius.joop.gui.WindowController;
 import rocks.wallenius.joop.gui.util.ClassStringFormatter;
 
@@ -45,7 +45,7 @@ public class ClassDiagramController implements Initializable {
     public void addClasses(List<Class> classes) {
 
         for(Class clazz : classes) {
-            final UmlClass umlClass = new UmlClass(clazz.getSimpleName(), ClassMemberMapperUtil.getFields(clazz), ClassMemberMapperUtil.getConstructors(clazz), ClassMemberMapperUtil.getMethods(clazz));
+            final UmlClass umlClass = new UmlClass(clazz.getSimpleName(), ClassUmlMapperUtil.getFields(clazz), ClassUmlMapperUtil.getConstructors(clazz), ClassUmlMapperUtil.getMethods(clazz));
             ContextMenu contextMenu = createContextMenu(clazz);
 
             umlClass.setOnContextMenuRequested(event -> {
@@ -66,7 +66,7 @@ public class ClassDiagramController implements Initializable {
         ContextMenu contextMenu = new ContextMenu();
         List<MenuItem> menuItems = new ArrayList<>();
 
-        for(Constructor constructor : ClassMemberMapperUtil.getConstructors(clazz)) {
+        for(Constructor constructor : ClassUmlMapperUtil.getConstructors(clazz)) {
 
             MenuItem item = new MenuItem(String.format("%s(%s)", constructor.getName(), ClassStringFormatter.formatParameters(constructor.getParameters())));
             item.setOnAction(event -> {

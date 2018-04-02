@@ -6,12 +6,12 @@ package rocks.wallenius.joop.model.entity;
 public class JoopObject {
 
     private String fullyQualifiedClassName;
-    private String instanceName;
+    private String reference;
     private Object object;
 
-    public JoopObject(String fullyQualifiedClassName, String instanceName, Object object) {
+    public JoopObject(String fullyQualifiedClassName, String reference, Object object) {
         this.fullyQualifiedClassName = fullyQualifiedClassName;
-        this.instanceName = instanceName;
+        this.reference = reference;
         this.object = object;
     }
 
@@ -19,8 +19,8 @@ public class JoopObject {
         return fullyQualifiedClassName;
     }
 
-    public String getInstanceName() {
-        return instanceName;
+    public String getReference() {
+        return reference;
     }
 
     public Object getObject() {

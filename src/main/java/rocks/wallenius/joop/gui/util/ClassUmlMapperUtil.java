@@ -12,9 +12,9 @@ import java.util.List;
 /**
  * Created by philipwallenius on 24/03/2018.
  */
-public class ClassMemberMapperUtil {
+public class ClassUmlMapperUtil {
 
-    private ClassMemberMapperUtil() {}
+    private ClassUmlMapperUtil() {}
 
     public static Field[] getFields(Class source) {
         List<Field> fields = new ArrayList<>();

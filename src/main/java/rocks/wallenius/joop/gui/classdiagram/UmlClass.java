@@ -101,8 +101,6 @@ public class UmlClass extends VBox {
         propertiesHolder.setAlignment(Pos.BASELINE_LEFT);
         propertiesHolder.setPadding(new Insets(0, 0, 10, 0));
 
-
-
         List<Text> props = new ArrayList<Text>();
 
         for(Field field : fields) {
