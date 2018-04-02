@@ -153,7 +153,8 @@ public class MainController {
 
         Object returnValue = null;
         try {
-            Method method = object.getClass().getMethod(methodName, parameters);
+            Method method = object.getClass().getDeclaredMethod(methodName, parameters);
+            method.setAccessible(true);
             returnValue = method.invoke(object, arguments);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
