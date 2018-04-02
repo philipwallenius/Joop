@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -105,6 +106,7 @@ public class MainController {
                     .map(JoopClass::getPath)
                     .map(Path::toFile)
                     .collect(Collectors.toList());
+
             CompilerUtil.compile(fileList.toArray(new File[fileList.size()]));
         }
 
@@ -115,6 +117,7 @@ public class MainController {
      */
     public void loadClasses() throws MalformedURLException, ClassNotFoundException {
         classes.clear();
+        objects.clear();
         for(JoopClass clazz : joopClasses) {
 
             URL[] urls = new URL[] { new URL("file:" + config.getString(CONF_KEY_COMPILATION_DIR)) };
@@ -144,6 +147,23 @@ public class MainController {
             e.printStackTrace();
         }
 
+    }
+
+    public Object invokeMethod(Object object, String methodName, Class[] parameters, Object[] arguments) {
+
+        Object returnValue = null;
+        try {
+            Method method = object.getClass().getMethod(methodName, parameters);
+            returnValue = method.invoke(object, arguments);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
+        return returnValue;
     }
 
     private JoopClass getClass(String fullyQualifiedName) {

@@ -212,7 +212,8 @@ public class WindowController implements Initializable {
 
                 JoopClass createdClass = mainController.createClass(fullyQualifiedName);
 
-                tabsController.addTab(createdClass);
+                Tab newTab = tabsController.addTab(createdClass);
+                newTab.setChanged(true);
 
             } catch (IOException | URISyntaxException exception) {
                 exception.printStackTrace();
@@ -251,6 +252,10 @@ public class WindowController implements Initializable {
         mainController.invokeConstructor(clazz, instanceName, parameters, arguments);
     }
 
+    public Object invokeMethod(Object object, String methodName, Class[] parameters, Object[] arguments) {
+        return mainController.invokeMethod(object, methodName, parameters, arguments);
+    }
+
     private Window getWindow() {
         return statusBar.getScene().getWindow();
     }
@@ -285,4 +290,5 @@ public class WindowController implements Initializable {
             objectDiagramController.addObjects(objects);
         });
     }
+
 }

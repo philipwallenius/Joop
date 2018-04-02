@@ -43,7 +43,7 @@ public class TabsController implements Initializable {
         return tabPane.getSelectionModel().getSelectedItem();
     }
 
-    public void addTab(JoopClass clazz) {
+    public rocks.wallenius.joop.model.entity.Tab addTab(JoopClass clazz) {
         rocks.wallenius.joop.model.entity.Tab newTab = new rocks.wallenius.joop.model.entity.Tab(clazz);
         newTab.getCodeArea().setOnKeyPressed(event -> newTab.setChanged(true));
         newTab.setOnClosed(event -> {
@@ -52,6 +52,7 @@ public class TabsController implements Initializable {
         tabPane.getTabs().add(newTab);
         tabPane.getSelectionModel().select(newTab);
         bindClassChangesToButtons(newTab);
+        return newTab;
     }
 
     public void stop() {
