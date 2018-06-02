@@ -4,10 +4,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.CycleMethod;
-import javafx.scene.paint.LinearGradient;
-import javafx.scene.paint.Stop;
+import javafx.scene.paint.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -55,7 +52,6 @@ public class UmlClass extends VBox {
         constructorsBox = new StackPane();
 
         setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderStroke.THIN)));
-        setPadding(new Insets(10, 10, 10, 10));
         setMinWidth(MIN_WIDTH);
         setMinHeight(MIN_HEIGHT);
 
@@ -85,7 +81,10 @@ public class UmlClass extends VBox {
 
         VBox titleHolder = new VBox();
         titleHolder.setAlignment(Pos.BASELINE_CENTER);
-        titleHolder.setPadding(new Insets(0, 0, 10, 0));
+
+        titleHolder.setPadding(new Insets(0, 0, 7, 0));
+
+        titleHolder.setBorder(createBorder());
 
         Text text = new Text();
         text.setText(title);
@@ -99,7 +98,9 @@ public class UmlClass extends VBox {
     private void drawFields() {
         VBox propertiesHolder = new VBox();
         propertiesHolder.setAlignment(Pos.BASELINE_LEFT);
-        propertiesHolder.setPadding(new Insets(0, 0, 10, 0));
+
+        propertiesHolder.setPadding(new Insets(7, 5, 7, 5));
+        propertiesHolder.setBorder(createBorder());
 
         List<Text> props = new ArrayList<Text>();
 
@@ -123,8 +124,8 @@ public class UmlClass extends VBox {
     private void drawConstructors() {
         VBox constructorsHolder = new VBox();
         constructorsHolder.setAlignment(Pos.BASELINE_LEFT);
-        constructorsHolder.setPadding(new Insets(0, 0, 0, 0));
 
+        constructorsHolder.setPadding(new Insets(5, 5, 0, 5));
 
         List<Text> c = new ArrayList<Text>();
 
@@ -145,8 +146,8 @@ public class UmlClass extends VBox {
     private void drawMethods() {
         VBox methodsHolder = new VBox();
         methodsHolder.setAlignment(Pos.BASELINE_LEFT);
-        methodsHolder.setPadding(new Insets(0, 0, 0, 0));
-
+        //methodsHolder.setPadding(new Insets(0, 0, 0, 0));
+        methodsHolder.setPadding(new Insets(0, 5, 7, 5));
 
         List<Text> m = new ArrayList<Text>();
 
@@ -165,6 +166,10 @@ public class UmlClass extends VBox {
         }
 
         methodsBox.getChildren().addAll(methodsHolder);
+    }
+
+    private Border createBorder() {
+        return new Border(new BorderStroke(null, null, Color.BLACK, null, null, null, BorderStrokeStyle.SOLID, null, null, null, null));
     }
 
     private static String getAccessModifierSymbol(String accessModifier) {

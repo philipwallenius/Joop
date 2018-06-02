@@ -47,7 +47,6 @@ public class UmlObject extends VBox {
         propertiesBox = new StackPane();
 
         setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderStroke.THIN)));
-        setPadding(new Insets(10, 10, 10, 10));
         setMinWidth(MIN_WIDTH);
         setMinHeight(MIN_HEIGHT);
 
@@ -75,7 +74,8 @@ public class UmlObject extends VBox {
     private void drawTitle() {
         VBox titleHolder = new VBox();
         titleHolder.setAlignment(Pos.BASELINE_CENTER);
-        titleHolder.setPadding(new Insets(0, 0, 10, 0));
+        titleHolder.setPadding(new Insets(0, 0, 7, 0));
+        titleHolder.setBorder(createBorder());
 
         Text text = new Text();
         text.setText(String.format("%s :%s", instanceName, className));
@@ -89,7 +89,7 @@ public class UmlObject extends VBox {
     private void drawProperties() {
         VBox propertiesHolder = new VBox();
         propertiesHolder.setAlignment(Pos.BASELINE_LEFT);
-        propertiesHolder.setPadding(new Insets(0, 0, 10, 0));
+        propertiesHolder.setPadding(new Insets(7, 5, 7, 5));
 
         List<Text> props = new ArrayList<Text>();
 
@@ -107,6 +107,10 @@ public class UmlObject extends VBox {
         }
 
         propertiesBox.getChildren().addAll(propertiesHolder);
+    }
+
+    private Border createBorder() {
+        return new Border(new BorderStroke(null, null, Color.BLACK, null, null, null, BorderStrokeStyle.SOLID, null, null, null, null));
     }
 
     private void drawMethods() {
