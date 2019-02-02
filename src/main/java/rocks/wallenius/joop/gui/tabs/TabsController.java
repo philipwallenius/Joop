@@ -7,7 +7,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import rocks.wallenius.joop.gui.WindowController;
 import rocks.wallenius.joop.model.entity.JoopClass;
-import rocks.wallenius.joop.oldgui.syntaxhighlight.SyntaxHighlighter;
+import rocks.wallenius.joop.syntaxhighlight.SyntaxHighlighter;
 
 import java.net.URL;
 import java.util.List;
