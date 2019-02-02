@@ -1,5 +1,7 @@
 package rocks.wallenius.joop.gui.dialog;
 
+import javafx.css.PseudoClass;
+import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import rocks.wallenius.joop.gui.classdiagram.Parameter;
@@ -16,9 +18,12 @@ public class MethodDialog extends Dialog<MethodParameters> {
 
     private Parameter[] parameters;
     private List<TextField> inputs;
+    private Label errorLabel;
 
     public MethodDialog(Parameter[] parameters) {
         super();
+
+        getDialogPane().getStylesheets().add("css/dialogs.css");
 
         this.parameters = parameters;
         inputs = new ArrayList<>();
@@ -32,9 +37,22 @@ public class MethodDialog extends Dialog<MethodParameters> {
 
     private void setup() {
         GridPane pane = new GridPane();
+        errorLabel = new Label("");
+        errorLabel.setStyle("-fx-text-fill: red;");
+        pane.add(errorLabel, 0, 0);
+
+        ButtonType buttonTypeOk = new ButtonType("Invoke", ButtonBar.ButtonData.OK_DONE);
+        getDialogPane().getButtonTypes().add(buttonTypeOk);
+
+        final Button okButton = (Button) getDialogPane().lookupButton(buttonTypeOk);
+        okButton.addEventFilter(ActionEvent.ACTION, event -> {
+            if(!isValid(parameters)) {
+                event.consume();
+            }
+        });
 
         if(parameters.length > 0) {
-            setHeaderText("Please provide the required parameters");
+            setHeaderText("Please provide parameter values");
 
             int rowIndex = 1;
 
@@ -51,9 +69,6 @@ public class MethodDialog extends Dialog<MethodParameters> {
 
         getDialogPane().setContent(pane);
 
-        ButtonType buttonTypeOk = new ButtonType("Create", ButtonBar.ButtonData.OK_DONE);
-        getDialogPane().getButtonTypes().add(buttonTypeOk);
-
         setResultConverter(button -> {
             if (button == buttonTypeOk) {
 
@@ -68,6 +83,33 @@ public class MethodDialog extends Dialog<MethodParameters> {
             }
             return null;
         });
+    }
+
+    private boolean isValid(Parameter[] parameters) {
+
+        final PseudoClass errorClass = PseudoClass.getPseudoClass("error");
+        boolean isValid = true;
+
+        for (int i = 0; i < parameters.length; i++) {
+            try {
+                TextField input = inputs.get(i);
+                castArgument(parameters[i].getType(), input.getText());
+                input.pseudoClassStateChanged(errorClass, false);
+            } catch(Exception ex) {
+                TextField input = inputs.get(i);
+                input.pseudoClassStateChanged(errorClass, true);
+
+                isValid = false;
+            }
+        }
+
+        if(!isValid) {
+            errorLabel.setText("Invalid value");
+        } else {
+            errorLabel.setText("");
+        }
+
+        return isValid;
     }
 
     private Object castArgument(Class type, String value) {

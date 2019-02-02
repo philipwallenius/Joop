@@ -1,5 +1,7 @@
 package rocks.wallenius.joop.gui.dialog;
 
+import javafx.css.PseudoClass;
+import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import rocks.wallenius.joop.gui.classdiagram.Parameter;
@@ -15,9 +17,12 @@ public class NewObjectDialog extends Dialog<NewObject> {
     private String className;
     private Parameter[] parameters;
     private List<TextField> inputs;
+    private Label errorLabel;
 
     public NewObjectDialog(String className, Parameter[] parameters) {
         super();
+
+        getDialogPane().getStylesheets().add("css/dialogs.css");
 
         this.className = className;
         this.parameters = parameters;
@@ -32,16 +37,30 @@ public class NewObjectDialog extends Dialog<NewObject> {
 
     private void setup() {
         GridPane pane = new GridPane();
+        errorLabel = new Label("");
+        errorLabel.setStyle("-fx-text-fill: red;");
+        pane.add(errorLabel, 0, 0);
 
         Label instanceNameLbl = new Label("Instance name: ");
         TextField instanceNameTxt = new TextField();
-        pane.add(instanceNameLbl, 0, 0);
-        pane.add(instanceNameTxt, 1, 0);
+        pane.add(instanceNameLbl, 0, 1);
+        pane.add(instanceNameTxt, 1, 1);
+
+        ButtonType buttonTypeOk = new ButtonType("Create", ButtonBar.ButtonData.OK_DONE);
+
+        getDialogPane().getButtonTypes().add(buttonTypeOk);
+
+        final Button okButton = (Button) getDialogPane().lookupButton(buttonTypeOk);
+        okButton.addEventFilter(ActionEvent.ACTION, event -> {
+            if(!isValid(instanceNameTxt, parameters)) {
+                event.consume();
+            }
+        });
 
         if(parameters.length > 0) {
-            setHeaderText("Please provide the required parameters");
+            setHeaderText("Please provide parameter values");
 
-            int rowIndex = 1;
+            int rowIndex = 2;
 
             for(Parameter param : parameters) {
                 Label lbl = new Label(String.format("%s %s: ", param.getType().getSimpleName(), param.getName()));
@@ -56,15 +75,13 @@ public class NewObjectDialog extends Dialog<NewObject> {
 
         getDialogPane().setContent(pane);
 
-        ButtonType buttonTypeOk = new ButtonType("Create", ButtonBar.ButtonData.OK_DONE);
-        getDialogPane().getButtonTypes().add(buttonTypeOk);
+
 
         setResultConverter(button -> {
             if (button == buttonTypeOk) {
 
                 String instanceName = instanceNameTxt.getText().trim();
                 List<Object> arguments = new ArrayList<>();
-
 
                 for (int i = 0; i < parameters.length; i++) {
                     TextField input = inputs.get(i);
@@ -75,6 +92,40 @@ public class NewObjectDialog extends Dialog<NewObject> {
             }
             return null;
         });
+    }
+
+    private boolean isValid(TextField instanceName, Parameter[] parameters) {
+
+        final PseudoClass errorClass = PseudoClass.getPseudoClass("error");
+        boolean isValid = true;
+
+        if(instanceName.getText().trim().length() <= 0) {
+            instanceName.pseudoClassStateChanged(errorClass, true);
+            isValid = false;
+        } else {
+            instanceName.pseudoClassStateChanged(errorClass, false);
+        }
+
+        for (int i = 0; i < parameters.length; i++) {
+            try {
+                TextField input = inputs.get(i);
+                castArgument(parameters[i].getType(), input.getText());
+                input.pseudoClassStateChanged(errorClass, false);
+            } catch(Exception ex) {
+                TextField input = inputs.get(i);
+                input.pseudoClassStateChanged(errorClass, true);
+
+                isValid = false;
+            }
+        }
+
+        if(!isValid) {
+            errorLabel.setText("Invalid value");
+        } else {
+            errorLabel.setText("");
+        }
+
+        return isValid;
     }
 
     private Object castArgument(Class type, String value) {

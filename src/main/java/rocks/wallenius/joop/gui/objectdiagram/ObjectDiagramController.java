@@ -9,14 +9,10 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
 import rocks.wallenius.joop.gui.WindowController;
-import rocks.wallenius.joop.gui.classdiagram.Constructor;
 import rocks.wallenius.joop.gui.classdiagram.Parameter;
 import rocks.wallenius.joop.gui.dialog.MethodDialog;
 import rocks.wallenius.joop.gui.dialog.MethodParameters;
-import rocks.wallenius.joop.gui.dialog.NewObject;
-import rocks.wallenius.joop.gui.dialog.NewObjectDialog;
 import rocks.wallenius.joop.gui.util.ClassStringFormatter;
-import rocks.wallenius.joop.gui.util.ClassUmlMapperUtil;
 import rocks.wallenius.joop.gui.util.ObjectUmlMapperUtil;
 import rocks.wallenius.joop.model.entity.JoopObject;
 
@@ -95,6 +91,8 @@ public class ObjectDiagramController implements Initializable {
             Optional<MethodParameters> result = dialog.showAndWait();
             if(result.isPresent()) {
                 methodParameters = result.get();
+            } else {
+                return;
             }
         }
 
@@ -108,11 +106,13 @@ public class ObjectDiagramController implements Initializable {
             parameters = new Class[0];
             arguments = new Object[0];
         }
-
+ 
         Object returnValue = parentController.invokeMethod(object, method.getName(), parameters, arguments);
 
         if(returnValue != null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, String.format("Method returned: %s", returnValue.toString()));
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, returnValue.toString());
+            alert.setTitle("Method returned");
+            alert.setHeaderText("Method returned");
             alert.showAndWait();
         }
 
