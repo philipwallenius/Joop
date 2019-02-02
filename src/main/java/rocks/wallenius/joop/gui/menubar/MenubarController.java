@@ -2,6 +2,7 @@ package rocks.wallenius.joop.gui.menubar;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import rocks.wallenius.joop.gui.WindowController;
@@ -64,6 +65,15 @@ public class MenubarController implements Initializable {
     public void openConsole() {
         menuItemConsole.setSelected(true);
     }
+
+    @FXML
+    public void about() {
+        Alert about = new Alert(Alert.AlertType.INFORMATION, "JOOP by Philip Wallenius\n\nContact:\nphilip.wallenius@gmail.com");
+        about.setTitle("About");
+        about.setHeaderText("About");
+        about.showAndWait();
+    }
+
 
     public MenuItem getMenuItemSave() {
         return menuItemSave;
