@@ -106,12 +106,12 @@ public class ObjectDiagramController implements Initializable {
             parameters = new Class[0];
             arguments = new Object[0];
         }
- 
+
         Object returnValue = parentController.invokeMethod(object, method.getName(), parameters, arguments);
 
         if(returnValue != null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, returnValue.toString());
-            alert.setTitle("Method returned");
+            alert.setTitle("Return value");
             alert.setHeaderText("Method returned");
             alert.showAndWait();
         }

@@ -7,6 +7,7 @@ import javafx.scene.layout.GridPane;
 import rocks.wallenius.joop.gui.classdiagram.Parameter;
 
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -94,16 +95,18 @@ public class NewObjectDialog extends Dialog<NewObject> {
         });
     }
 
-    private boolean isValid(TextField instanceName, Parameter[] parameters) {
+    private boolean isValid(TextField instanceNameInput, Parameter[] parameters) {
 
         final PseudoClass errorClass = PseudoClass.getPseudoClass("error");
         boolean isValid = true;
 
-        if(instanceName.getText().trim().length() <= 0) {
-            instanceName.pseudoClassStateChanged(errorClass, true);
+        String instanceName = instanceNameInput.getText().trim();
+        final Pattern pattern = Pattern.compile("[a-zA-Z$_][a-zA-Z0-9$_]*");
+        if(instanceName.length() <= 0 || !pattern.matcher(instanceName).matches()) {
+            instanceNameInput.pseudoClassStateChanged(errorClass, true);
             isValid = false;
         } else {
-            instanceName.pseudoClassStateChanged(errorClass, false);
+            instanceNameInput.pseudoClassStateChanged(errorClass, false);
         }
 
         for (int i = 0; i < parameters.length; i++) {
