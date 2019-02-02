@@ -35,9 +35,11 @@ public class CompilerUtil {
         StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null);
 
         List<String> optionList = new ArrayList<>();
+        optionList.add("-parameters");
         optionList.add("-classpath");
-        optionList.add(System.getProperty("java.class.path")+";"+ config.getString(CONF_KEY_COMPILATION_DIR));
+        optionList.add(System.getProperty("java.class.path") + ";" + config.getString(CONF_KEY_COMPILATION_DIR));
         optionList.add("-d");
+
         optionList.add(config.getString(CONF_KEY_COMPILATION_DIR));
 
         Iterable<? extends JavaFileObject> compilationUnit = fileManager.getJavaFileObjectsFromFiles(Arrays.asList(files));

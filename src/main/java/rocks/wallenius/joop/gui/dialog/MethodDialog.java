@@ -2,20 +2,22 @@ package rocks.wallenius.joop.gui.dialog;
 
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import rocks.wallenius.joop.gui.classdiagram.Parameter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by philipwallenius on 02/04/2018.
  */
 public class MethodDialog extends Dialog<MethodParameters> {
 
-    private Class[] parameters;
+    private Parameter[] parameters;
     private List<TextField> inputs;
 
-    public MethodDialog(Class[] parameters) {
+    public MethodDialog(Parameter[] parameters) {
         super();
 
         this.parameters = parameters;
@@ -36,8 +38,8 @@ public class MethodDialog extends Dialog<MethodParameters> {
 
             int rowIndex = 1;
 
-            for(Class param : parameters) {
-                Label lbl = new Label(param.getSimpleName() + ": ");
+            for(Parameter param : parameters) {
+                Label lbl = new Label(String.format("%s %s: ", param.getType().getSimpleName(), param.getName()));
                 TextField txt = new TextField();
                 pane.add(lbl, 0, rowIndex);
                 pane.add(txt, 1, rowIndex);
@@ -59,10 +61,10 @@ public class MethodDialog extends Dialog<MethodParameters> {
 
                 for(int i = 0; i < parameters.length; i++) {
                     TextField input = inputs.get(i);
-                    arguments.add(castArgument(parameters[i], input.getText()));
+                    arguments.add(castArgument(parameters[i].getType(), input.getText()));
                 }
 
-                return new MethodParameters(Arrays.asList(parameters), arguments);
+                return new MethodParameters(Arrays.stream(parameters).map(Parameter::getType).collect(Collectors.toList()), arguments);
             }
             return null;
         });

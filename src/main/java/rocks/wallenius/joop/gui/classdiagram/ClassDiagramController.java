@@ -80,9 +80,9 @@ public class ClassDiagramController implements Initializable {
 
     private void invokeConstructor(Class clazz, Constructor constructor) {
 
-        List<Class> params = Arrays.stream(constructor.getParameters()).map(rocks.wallenius.joop.gui.classdiagram.Parameter::getType).collect(Collectors.toList());
+        List<Parameter> params = Arrays.stream(constructor.getParameters()).map(parameter -> new Parameter(parameter.getName(), parameter.getType())).collect(Collectors.toList());
 
-        NewObjectDialog dialog = new NewObjectDialog(clazz.getName(), params.toArray(new Class[params.size()]));
+        NewObjectDialog dialog = new NewObjectDialog(clazz.getName(), params.toArray(new Parameter[params.size()]));
 
         Optional<NewObject> result = dialog.showAndWait();
 

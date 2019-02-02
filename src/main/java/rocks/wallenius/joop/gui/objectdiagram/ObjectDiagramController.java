@@ -10,6 +10,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
 import rocks.wallenius.joop.gui.WindowController;
 import rocks.wallenius.joop.gui.classdiagram.Constructor;
+import rocks.wallenius.joop.gui.classdiagram.Parameter;
 import rocks.wallenius.joop.gui.dialog.MethodDialog;
 import rocks.wallenius.joop.gui.dialog.MethodParameters;
 import rocks.wallenius.joop.gui.dialog.NewObject;
@@ -86,11 +87,11 @@ public class ObjectDiagramController implements Initializable {
 
     private void invokeMethod(Object object, Method method) {
 
-        List<Class> params = Arrays.stream(method.getParameters()).map(rocks.wallenius.joop.gui.classdiagram.Parameter::getType).collect(Collectors.toList());
+        List<Parameter> params = Arrays.stream(method.getParameters()).map(parameter -> new Parameter(parameter.getName(), parameter.getType())).collect(Collectors.toList());
 
         MethodParameters methodParameters = null;
         if(params.size() > 0) {
-            MethodDialog dialog = new MethodDialog(params.toArray(new Class[params.size()]));
+            MethodDialog dialog = new MethodDialog(params.toArray(new Parameter[params.size()]));
             Optional<MethodParameters> result = dialog.showAndWait();
             if(result.isPresent()) {
                 methodParameters = result.get();

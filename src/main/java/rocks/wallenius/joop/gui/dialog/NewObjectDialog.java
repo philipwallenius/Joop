@@ -2,8 +2,10 @@ package rocks.wallenius.joop.gui.dialog;
 
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import rocks.wallenius.joop.gui.classdiagram.Parameter;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by philipwallenius on 25/03/2018.
@@ -11,10 +13,10 @@ import java.util.*;
 public class NewObjectDialog extends Dialog<NewObject> {
 
     private String className;
-    private Class[] parameters;
+    private Parameter[] parameters;
     private List<TextField> inputs;
 
-    public NewObjectDialog(String className, Class[] parameters) {
+    public NewObjectDialog(String className, Parameter[] parameters) {
         super();
 
         this.className = className;
@@ -41,8 +43,8 @@ public class NewObjectDialog extends Dialog<NewObject> {
 
             int rowIndex = 1;
 
-            for(Class param : parameters) {
-                Label lbl = new Label(param.getSimpleName() + ": ");
+            for(Parameter param : parameters) {
+                Label lbl = new Label(String.format("%s %s: ", param.getType().getSimpleName(), param.getName()));
                 TextField txt = new TextField();
                 pane.add(lbl, 0, rowIndex);
                 pane.add(txt, 1, rowIndex);
@@ -63,12 +65,13 @@ public class NewObjectDialog extends Dialog<NewObject> {
                 String instanceName = instanceNameTxt.getText().trim();
                 List<Object> arguments = new ArrayList<>();
 
-                for(int i = 0; i < parameters.length; i++) {
+
+                for (int i = 0; i < parameters.length; i++) {
                     TextField input = inputs.get(i);
-                    arguments.add(castArgument(parameters[i], input.getText()));
+                    arguments.add(castArgument(parameters[i].getType(), input.getText()));
                 }
 
-                return new NewObject(instanceName, Arrays.asList(parameters), arguments);
+                return new NewObject(instanceName, Arrays.stream(parameters).map(Parameter::getType).collect(Collectors.toList()), arguments);
             }
             return null;
         });
