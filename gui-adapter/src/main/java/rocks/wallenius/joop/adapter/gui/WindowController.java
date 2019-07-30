@@ -12,22 +12,24 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.controlsfx.control.StatusBar;
+import rocks.wallenius.joop.adapter.model.Source;
 import rocks.wallenius.joop.adapter.repository.FileClassRepositoryImpl;
 import rocks.wallenius.joop.exception.CompilationException;
 import rocks.wallenius.joop.controller.MainController;
 import rocks.wallenius.joop.adapter.gui.classdiagram.ClassDiagramController;
 import rocks.wallenius.joop.adapter.gui.console.ConsoleController;
 import rocks.wallenius.joop.adapter.gui.objectdiagram.ObjectDiagramController;
-import rocks.wallenius.joop.adapter.gui.editor.tabs.TabsController;
+import rocks.wallenius.joop.adapter.gui.editor.EditorController;
 import rocks.wallenius.joop.adapter.gui.dialog.NewClassDialog;
 import rocks.wallenius.joop.adapter.gui.menubar.MenubarController;
 import rocks.wallenius.joop.model.entity.JoopClass;
 import rocks.wallenius.joop.model.entity.JoopObject;
-import rocks.wallenius.joop.adapter.gui.editor.tabs.Tab;
+import rocks.wallenius.joop.adapter.gui.editor.Tab;
 import rocks.wallenius.joop.adapter.gui.toolbar.ToolbarController;
 import rocks.wallenius.joop.repository.ClassRepository;
 import rocks.wallenius.joop.service.ClassService;
 import rocks.wallenius.joop.service.ClassServiceImpl;
+import rocks.wallenius.joop.util.ClassFileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +45,7 @@ import java.util.*;
 public class WindowController implements Initializable {
 
     @FXML
-    TabsController tabsController;
+    EditorController editorController;
 
     @FXML
     StatusBar statusBar;
@@ -89,7 +91,7 @@ public class WindowController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        tabsController.setParentController(this);
+        editorController.setParentController(this);
         menubarController.setParentController(this);
         toolbarController.setParentController(this);
         consoleController.setParentController(this);
@@ -123,9 +125,10 @@ public class WindowController implements Initializable {
             }
 
             try {
+                Source source = new Source(className, ClassFileUtils.loadClass(file));
 
                 JoopClass loadedClass = mainController.openClass(className, file);
-                tabsController.addTab(loadedClass);
+                editorController.addTab(loadedClass);
             } catch (IOException e) {
                 e.printStackTrace();
                 new Alert(Alert.AlertType.ERROR, "Unable to load class").showAndWait();
@@ -138,11 +141,11 @@ public class WindowController implements Initializable {
      */
     @FXML
     public void save() {
-        saveClass(tabsController.getActiveTab());
+        saveClass(editorController.getActiveTab());
     }
 
     private void saveAll() {
-        for(javafx.scene.control.Tab currentTab : tabsController.getTabs()) {
+        for(javafx.scene.control.Tab currentTab : editorController.getTabs()) {
             saveClass(currentTab);
         }
     }
@@ -165,7 +168,7 @@ public class WindowController implements Initializable {
     public void compileClasses() {
 
         boolean proceed = true;
-        if(tabsController.isUnsavedChanges()) {
+        if(editorController.isUnsavedChanges()) {
             proceed = false;
             Optional<ButtonType> choice = promptUnsavedChanges();
 
@@ -222,7 +225,7 @@ public class WindowController implements Initializable {
 
                 JoopClass createdClass = mainController.createClass(fullyQualifiedName);
 
-                Tab newTab = tabsController.addTab(createdClass);
+                Tab newTab = editorController.addTab(createdClass);
                 newTab.setChanged(true);
 
             } catch (IOException | URISyntaxException exception) {
@@ -247,7 +250,7 @@ public class WindowController implements Initializable {
     }
 
     public void stop() {
-        tabsController.stop();
+        editorController.stop();
     }
 
     public MenubarController getMenubarController() {

@@ -1,4 +1,4 @@
-package rocks.wallenius.joop.adapter.gui.editor.tabs;
+package rocks.wallenius.joop.adapter.gui.editor;
 
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
@@ -7,7 +7,6 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import rocks.wallenius.joop.adapter.gui.WindowController;
 import rocks.wallenius.joop.model.entity.JoopClass;
-import rocks.wallenius.joop.adapter.gui.editor.SyntaxHighlighter;
 
 import java.net.URL;
 import java.util.List;
@@ -16,7 +15,7 @@ import java.util.ResourceBundle;
 /**
  * Created by philipwallenius on 24/03/2018.
  */
-public class TabsController implements Initializable {
+public class EditorController implements Initializable {
 
     @FXML
     TabPane tabPane;
@@ -43,8 +42,8 @@ public class TabsController implements Initializable {
         return tabPane.getSelectionModel().getSelectedItem();
     }
 
-    public rocks.wallenius.joop.adapter.gui.editor.tabs.Tab addTab(JoopClass clazz) {
-        rocks.wallenius.joop.adapter.gui.editor.tabs.Tab newTab = new rocks.wallenius.joop.adapter.gui.editor.tabs.Tab(clazz);
+    public rocks.wallenius.joop.adapter.gui.editor.Tab addTab(JoopClass clazz) {
+        rocks.wallenius.joop.adapter.gui.editor.Tab newTab = new rocks.wallenius.joop.adapter.gui.editor.Tab(clazz);
         newTab.getCodeArea().setOnKeyPressed(event -> newTab.setChanged(true));
         newTab.setOnClosed(event -> {
             parentController.closeClass(newTab.getClazz());
@@ -63,8 +62,8 @@ public class TabsController implements Initializable {
         boolean unsavedChanges = false;
 
         for(javafx.scene.control.Tab tab : getTabs()) {
-            if(tab instanceof rocks.wallenius.joop.adapter.gui.editor.tabs.Tab) {
-                rocks.wallenius.joop.adapter.gui.editor.tabs.Tab currentTab = (rocks.wallenius.joop.adapter.gui.editor.tabs.Tab) tab;
+            if(tab instanceof rocks.wallenius.joop.adapter.gui.editor.Tab) {
+                rocks.wallenius.joop.adapter.gui.editor.Tab currentTab = (rocks.wallenius.joop.adapter.gui.editor.Tab) tab;
                 if(currentTab.getChanged()) {
                     unsavedChanges = true;
                     break;
@@ -75,7 +74,7 @@ public class TabsController implements Initializable {
         return unsavedChanges;
     }
 
-    private void setSyntaxHighlightingForTab(rocks.wallenius.joop.adapter.gui.editor.tabs.Tab tab) {
+    private void setSyntaxHighlightingForTab(rocks.wallenius.joop.adapter.gui.editor.Tab tab) {
         syntaxHighlighter.applySyntaxHighlighting(tab.getCodeArea());
     }
 
@@ -87,7 +86,7 @@ public class TabsController implements Initializable {
         // listen to when user changes tabs in the editor, bind the current selected tab and class to the save button
         tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                rocks.wallenius.joop.adapter.gui.editor.tabs.Tab currentTab = getTabByName(newValue.getText());
+                rocks.wallenius.joop.adapter.gui.editor.Tab currentTab = getTabByName(newValue.getText());
                 bindClassChangesToButtons(currentTab);
                 setSyntaxHighlightingForTab(currentTab);
             }
@@ -111,7 +110,7 @@ public class TabsController implements Initializable {
      *
      * @param tab to listen for changes in
      */
-    private void bindClassChangesToButtons(rocks.wallenius.joop.adapter.gui.editor.tabs.Tab tab) {
+    private void bindClassChangesToButtons(rocks.wallenius.joop.adapter.gui.editor.Tab tab) {
         parentController.getToolbarController().getButtonSave().setDisable(!tab.getChanged());
         parentController.getMenubarController().getMenuItemSave().setDisable(!tab.getChanged());
 
@@ -121,10 +120,10 @@ public class TabsController implements Initializable {
         });
     }
 
-    private rocks.wallenius.joop.adapter.gui.editor.tabs.Tab getTabByName(String name) {
+    private rocks.wallenius.joop.adapter.gui.editor.Tab getTabByName(String name) {
         for(javafx.scene.control.Tab tab : getTabs()) {
-            if(tab.getText().equals(name) && tab instanceof rocks.wallenius.joop.adapter.gui.editor.tabs.Tab) {
-                return (rocks.wallenius.joop.adapter.gui.editor.tabs.Tab) tab;
+            if(tab.getText().equals(name) && tab instanceof rocks.wallenius.joop.adapter.gui.editor.Tab) {
+                return (rocks.wallenius.joop.adapter.gui.editor.Tab) tab;
             }
         }
         return null;

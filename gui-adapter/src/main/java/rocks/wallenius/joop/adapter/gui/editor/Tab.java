@@ -1,4 +1,4 @@
-package rocks.wallenius.joop.adapter.gui.editor.tabs;
+package rocks.wallenius.joop.adapter.gui.editor;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
