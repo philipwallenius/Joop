@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+
+<ScrollPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="rocks.wallenius.joop.adapter.gui.classdiagram.ClassDiagramController" fx:id="diagram" styleClass="class-view"/>
