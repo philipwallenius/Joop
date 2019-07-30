@@ -1,4 +1,4 @@
-package rocks.wallenius.joop.adapter.gui.dialog;
+package rocks.wallenius.joop.adapter.gui.classdiagram.dialog;
 
 import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;

@@ -10,10 +10,9 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
 import rocks.wallenius.joop.adapter.gui.WindowController;
 import rocks.wallenius.joop.adapter.gui.classdiagram.Parameter;
-import rocks.wallenius.joop.adapter.gui.dialog.MethodDialog;
-import rocks.wallenius.joop.adapter.gui.dialog.MethodParameters;
+import rocks.wallenius.joop.adapter.gui.objectdiagram.dialog.MethodDialog;
+import rocks.wallenius.joop.adapter.gui.objectdiagram.dialog.MethodParameters;
 import rocks.wallenius.joop.adapter.gui.util.ClassStringFormatter;
-import rocks.wallenius.joop.adapter.gui.util.ObjectUmlMapperUtil;
 import rocks.wallenius.joop.model.entity.JoopObject;
 
 import java.net.URL;

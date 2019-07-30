@@ -1,10 +1,11 @@
-package rocks.wallenius.joop.adapter.gui.dialog;
+package rocks.wallenius.joop.adapter.gui.objectdiagram.dialog;
 
 import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import rocks.wallenius.joop.adapter.gui.classdiagram.Parameter;
+import rocks.wallenius.joop.adapter.gui.objectdiagram.dialog.MethodParameters;
 
 import java.util.ArrayList;
 import java.util.Arrays;

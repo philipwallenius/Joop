@@ -1,4 +1,4 @@
-package rocks.wallenius.joop.adapter.gui.util;
+package rocks.wallenius.joop.adapter.gui.objectdiagram;
 
 import rocks.wallenius.joop.adapter.gui.objectdiagram.Method;
 import rocks.wallenius.joop.adapter.gui.classdiagram.Parameter;

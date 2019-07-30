@@ -1,4 +1,4 @@
-package rocks.wallenius.joop.adapter.gui.util;
+package rocks.wallenius.joop.adapter.gui.classdiagram;
 
 import rocks.wallenius.joop.adapter.gui.classdiagram.Constructor;
 import rocks.wallenius.joop.adapter.gui.classdiagram.Field;

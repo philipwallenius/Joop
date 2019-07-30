@@ -7,9 +7,8 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
-import rocks.wallenius.joop.adapter.gui.dialog.NewObject;
-import rocks.wallenius.joop.adapter.gui.dialog.NewObjectDialog;
-import rocks.wallenius.joop.adapter.gui.util.ClassUmlMapperUtil;
+import rocks.wallenius.joop.adapter.gui.classdiagram.dialog.NewObject;
+import rocks.wallenius.joop.adapter.gui.classdiagram.dialog.NewObjectDialog;
 import rocks.wallenius.joop.adapter.gui.WindowController;
 import rocks.wallenius.joop.adapter.gui.util.ClassStringFormatter;
 

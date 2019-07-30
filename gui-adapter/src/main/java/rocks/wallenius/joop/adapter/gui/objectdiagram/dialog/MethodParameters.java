@@ -1,4 +1,4 @@
-package rocks.wallenius.joop.adapter.gui.dialog;
+package rocks.wallenius.joop.adapter.gui.objectdiagram.dialog;
 
 import java.util.List;
 
