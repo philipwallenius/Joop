@@ -2,7 +2,7 @@
 
 <?import javafx.scene.control.*?>
 
-<MenuBar xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="rocks.wallenius.joop.adapter.view.menubar.MenubarController">
+<MenuBar xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="rocks.wallenius.joop.view.menubar.MenubarController">
     <Menu text="File">
         <MenuItem text="New" fx:id="menuItemNew" onAction="#create"/>
         <MenuItem text="Open" fx:id="menuItemOpen" onAction="#open"/>

@@ -8,7 +8,7 @@
 <?import org.fxmisc.richtext.StyleClassedTextArea?>
 
 <VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml" styleClass="console" fx:controller="rocks.wallenius.joop.adapter.view.console.ConsoleController" fx:id="console">
+      xmlns:fx="http://javafx.com/fxml" styleClass="console" fx:controller="rocks.wallenius.joop.view.console.ConsoleController" fx:id="console">
     <ToolBar>
         <Pane HBox.hgrow="ALWAYS"/>
         <Button onAction="#closeConsole">

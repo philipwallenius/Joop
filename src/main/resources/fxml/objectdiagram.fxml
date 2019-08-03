@@ -4,4 +4,4 @@
 
 <ScrollPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="rocks.wallenius.joop.adapter.view.objectdiagram.ObjectDiagramController" fx:id="diagram" styleClass="object-view"/>
+            fx:controller="rocks.wallenius.joop.view.objectdiagram.ObjectDiagramController" fx:id="diagram" styleClass="object-view"/>
