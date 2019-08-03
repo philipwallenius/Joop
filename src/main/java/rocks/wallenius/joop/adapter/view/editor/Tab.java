@@ -25,7 +25,7 @@ public class Tab extends javafx.scene.control.Tab {
     private Source source;
 
     public Tab(Source source) {
-        super(source.getClassName());
+        super(String.format("%s.java", source.getClassName()));
         this.source = source;
 
         codeArea = new CodeArea();
