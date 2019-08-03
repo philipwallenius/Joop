@@ -1,11 +1,19 @@
 package rocks.wallenius.joop.view.console;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import org.fxmisc.richtext.StyleClassedTextArea;
 import rocks.wallenius.joop.view.View;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -20,6 +28,18 @@ public class ConsoleController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        ContextMenu contextMenu = createContextMenu();
+
+        consoleStyleClassedTextArea.setOnContextMenuRequested(event -> {
+            contextMenu.hide();
+            contextMenu.show(consoleStyleClassedTextArea, event.getScreenX(), event.getScreenY());
+        });
+
+        consoleStyleClassedTextArea.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.PRIMARY) {
+                contextMenu.hide();
+            }
+        });
 
     }
 
@@ -29,7 +49,9 @@ public class ConsoleController implements Initializable {
     }
 
     public void clear() {
-        consoleStyleClassedTextArea.clear();
+        if(consoleStyleClassedTextArea.getText().length() > 0) {
+            consoleStyleClassedTextArea.clear();
+        }
     }
 
     public void appendInfo(String message) {
@@ -42,6 +64,18 @@ public class ConsoleController implements Initializable {
 
     public void setParentController(View parentController) {
         this.parentController = parentController;
+    }
+
+    private ContextMenu createContextMenu() {
+        ContextMenu contextMenu = new ContextMenu();
+        List<MenuItem> menuItems = new ArrayList<>();
+
+        MenuItem item = new MenuItem("Clear All");
+        item.setOnAction(event -> clear());
+        menuItems.add(item);
+
+        contextMenu.getItems().addAll(menuItems);
+        return contextMenu;
     }
 
     private int getStartIndex() {

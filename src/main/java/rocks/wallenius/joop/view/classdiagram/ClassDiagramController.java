@@ -6,6 +6,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.FlowPane;
 import rocks.wallenius.joop.view.classdiagram.dialog.NewObject;
 import rocks.wallenius.joop.view.classdiagram.dialog.NewObjectDialog;
@@ -55,6 +56,12 @@ public class ClassDiagramController implements Initializable {
             umlClass.setOnContextMenuRequested(event -> {
                 contextMenu.hide();
                 contextMenu.show(umlClass, event.getScreenX(), event.getScreenY());
+            });
+
+            umlClass.setOnMouseClicked(event -> {
+                if (event.getButton() == MouseButton.PRIMARY) {
+                    contextMenu.hide();
+                }
             });
 
             pane.getChildren().add(umlClass);

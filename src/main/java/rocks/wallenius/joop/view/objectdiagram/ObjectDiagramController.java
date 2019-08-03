@@ -7,6 +7,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.FlowPane;
 import rocks.wallenius.joop.view.View;
 import rocks.wallenius.joop.view.classdiagram.Parameter;
@@ -58,6 +59,12 @@ public class ObjectDiagramController implements Initializable {
             umlObject.setOnContextMenuRequested(event -> {
                 contextMenu.hide();
                 contextMenu.show(umlObject, event.getScreenX(), event.getScreenY());
+            });
+
+            umlObject.setOnMouseClicked(event -> {
+                if (event.getButton() == MouseButton.PRIMARY) {
+                    contextMenu.hide();
+                }
             });
 
             pane.getChildren().add(umlObject);
