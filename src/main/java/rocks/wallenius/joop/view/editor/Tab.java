@@ -2,7 +2,9 @@ package rocks.wallenius.joop.view.editor;
 
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
+import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.wellbehaved.event.Nodes;
@@ -37,7 +39,8 @@ public class Tab extends javafx.scene.control.Tab {
         setupKeyBehaviour(codeArea);
 
         codeArea.appendText(source.getCode());
-        setContent(codeArea);
+
+        setContent(new VirtualizedScrollPane(codeArea));
     }
 
     private void setupCodeArea(CodeArea codeArea) {

@@ -5,7 +5,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
-import rocks.wallenius.joop.view.JavaFXViewImpl;
+import rocks.wallenius.joop.view.View;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -15,7 +15,7 @@ import java.util.ResourceBundle;
  */
 public class MenubarController implements Initializable {
 
-    private JavaFXViewImpl parentController;
+    private View parentController;
 
     @FXML
     MenuItem menuItemSave;
@@ -87,7 +87,7 @@ public class MenubarController implements Initializable {
         return menuItemConsole;
     }
 
-    public void setParentController(JavaFXViewImpl parentController) {
+    public void setParentController(View parentController) {
         this.parentController = parentController;
     }
 

@@ -7,7 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import rocks.wallenius.joop.controller.Controller;
 import rocks.wallenius.joop.model.Model;
-import rocks.wallenius.joop.view.JavaFXViewImpl;
+import rocks.wallenius.joop.view.View;
 
 /**
  *
@@ -39,14 +39,14 @@ public class JoopApplication extends Application {
         primaryStage.show();
 
         Model model = new Model();
-        JavaFXViewImpl view = fxmlLoader.getController();
+        View view = fxmlLoader.getController();
         Controller controller = new Controller(model, view);
         view.setController(controller);
     }
 
     @Override
     public void stop() {
-        JavaFXViewImpl controller = fxmlLoader.getController();
+        View controller = fxmlLoader.getController();
         controller.stop();
     }
 

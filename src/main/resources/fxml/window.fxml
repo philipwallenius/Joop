@@ -1,7 +1,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.StatusBar?>
-<BorderPane fx:controller="rocks.wallenius.joop.view.JavaFXViewImpl" xmlns:fx="http://javafx.com/fxml">
+<BorderPane fx:controller="rocks.wallenius.joop.view.View" xmlns:fx="http://javafx.com/fxml">
     <top>
         <VBox>
             <fx:include source="menubar.fxml" fx:id="menubar" />

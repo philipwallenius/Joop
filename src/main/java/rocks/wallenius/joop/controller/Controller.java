@@ -3,7 +3,7 @@ package rocks.wallenius.joop.controller;
 import rocks.wallenius.joop.model.JoopObject;
 import rocks.wallenius.joop.model.Model;
 import rocks.wallenius.joop.model.Source;
-import rocks.wallenius.joop.view.JavaFXViewImpl;
+import rocks.wallenius.joop.view.View;
 
 import javax.tools.*;
 import java.io.File;
@@ -28,9 +28,9 @@ public class Controller {
 
     private static final String COMPILATION_DIR = "classes/";
     private Model model;
-    private JavaFXViewImpl view;
+    private View view;
 
-    public Controller(Model model, JavaFXViewImpl view) {
+    public Controller(Model model, View view) {
         this.model = model;
         this.view = view;
     }

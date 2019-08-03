@@ -4,7 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import rocks.wallenius.joop.view.JavaFXViewImpl;
+import rocks.wallenius.joop.view.View;
 import rocks.wallenius.joop.model.Source;
 
 import java.net.URL;
@@ -19,7 +19,7 @@ public class EditorController implements Initializable {
 
     @FXML
     TabPane tabPane;
-    private JavaFXViewImpl parentController;
+    private View parentController;
     private SyntaxHighlighter syntaxHighlighter;
 
     @Override
@@ -28,7 +28,7 @@ public class EditorController implements Initializable {
         setupUiBindings();
     }
 
-    public void setParentController(JavaFXViewImpl parentController) {
+    public void setParentController(View parentController) {
         this.parentController = parentController;
     }
 

@@ -3,7 +3,7 @@ package rocks.wallenius.joop.view.toolbar;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import rocks.wallenius.joop.view.JavaFXViewImpl;
+import rocks.wallenius.joop.view.View;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -13,7 +13,7 @@ import java.util.ResourceBundle;
  */
 public class ToolbarController implements Initializable {
 
-    private JavaFXViewImpl parentController;
+    private View parentController;
 
     @FXML
     Button buttonSave;
@@ -53,7 +53,7 @@ public class ToolbarController implements Initializable {
         return buttonCompile;
     }
 
-    public void setParentController(JavaFXViewImpl parentController) {
+    public void setParentController(View parentController) {
         this.parentController = parentController;
     }
 

@@ -28,11 +28,11 @@ import java.net.URL;
 import java.util.*;
 
 /**
- * MVC GuiController
+ * The view which also is the main JavaFX controller
  * <p>
  * Created by philipwallenius on 14/02/16.
  */
-public class JavaFXViewImpl implements Initializable {
+public class View implements Initializable {
 
     @FXML
     EditorController editorController;

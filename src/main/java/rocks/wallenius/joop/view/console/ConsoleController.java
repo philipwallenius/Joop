@@ -3,7 +3,7 @@ package rocks.wallenius.joop.view.console;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import org.fxmisc.richtext.StyleClassedTextArea;
-import rocks.wallenius.joop.view.JavaFXViewImpl;
+import rocks.wallenius.joop.view.View;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -13,7 +13,7 @@ import java.util.ResourceBundle;
  */
 public class ConsoleController implements Initializable {
 
-    private JavaFXViewImpl parentController;
+    private View parentController;
 
     @FXML
     StyleClassedTextArea consoleStyleClassedTextArea;
@@ -42,7 +42,7 @@ public class ConsoleController implements Initializable {
         consoleStyleClassedTextArea.setStyleClass(0, message.length(), "exceptionText");
     }
 
-    public void setParentController(JavaFXViewImpl parentController) {
+    public void setParentController(View parentController) {
         this.parentController = parentController;
     }
 

@@ -9,7 +9,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
 import rocks.wallenius.joop.view.classdiagram.dialog.NewObject;
 import rocks.wallenius.joop.view.classdiagram.dialog.NewObjectDialog;
-import rocks.wallenius.joop.view.JavaFXViewImpl;
+import rocks.wallenius.joop.view.View;
 import rocks.wallenius.joop.view.util.ClassStringFormatter;
 
 import java.net.URL;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  */
 public class ClassDiagramController implements Initializable {
 
-    private JavaFXViewImpl parentController;
+    private View parentController;
 
     @FXML
     ScrollPane diagram;
@@ -62,7 +62,7 @@ public class ClassDiagramController implements Initializable {
 
     }
 
-    public void setParentController(JavaFXViewImpl parentController) {
+    public void setParentController(View parentController) {
         this.parentController = parentController;
     }
 
