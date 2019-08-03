@@ -147,7 +147,6 @@ public class View implements Initializable {
 
         if(proceed) {
             statusBar.setText("Compiling...");
-            consoleController.clear();
 
             try {
                 controller.compile();

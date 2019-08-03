@@ -7,6 +7,7 @@
 <?import javafx.scene.image.Image?>
 <?import org.fxmisc.richtext.StyleClassedTextArea?>
 
+<?import org.fxmisc.flowless.VirtualizedScrollPane?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml" styleClass="console" fx:controller="rocks.wallenius.joop.view.console.ConsoleController" fx:id="console">
     <ToolBar>
@@ -22,5 +23,9 @@
             </graphic>
         </Button>
     </ToolBar>
-    <StyleClassedTextArea fx:id="consoleStyleClassedTextArea" editable="false"/>
+    <VirtualizedScrollPane>
+        <content>
+            <StyleClassedTextArea fx:id="consoleStyleClassedTextArea" editable="false"/>
+        </content>
+    </VirtualizedScrollPane>
 </VBox>

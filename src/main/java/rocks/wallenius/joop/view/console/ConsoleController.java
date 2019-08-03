@@ -33,17 +33,27 @@ public class ConsoleController implements Initializable {
     }
 
     public void appendInfo(String message) {
-        consoleStyleClassedTextArea.appendText(message);
-        consoleStyleClassedTextArea.setStyleClass(0, message.length(), "infoText");
+        appendLine(message, "infoText");
     }
 
     public void appendError(String message) {
-        consoleStyleClassedTextArea.appendText(message);
-        consoleStyleClassedTextArea.setStyleClass(0, message.length(), "exceptionText");
+        appendLine(message, "exceptionText");
     }
 
     public void setParentController(View parentController) {
         this.parentController = parentController;
+    }
+
+    private int getStartIndex() {
+        int startIndex = consoleStyleClassedTextArea.getText().length();
+        return Math.max(0, startIndex);
+    }
+
+    private void appendLine(String message, String styleClass) {
+        message = message + System.lineSeparator();
+        int startIndex = getStartIndex();
+        consoleStyleClassedTextArea.appendText(message);
+        consoleStyleClassedTextArea.setStyleClass(startIndex, startIndex + message.length(), styleClass);
     }
 
 }
