@@ -55,7 +55,7 @@ public class ClassFileUtils {
     }
 
     public static String loadClassTemplate(String fullyQualifiedName) throws IOException, URISyntaxException {
-        URL url = ClassFileUtils.class.getResource("/class_template.java");
+        URL url = ClassFileUtils.class.getResource("/class_template.template");
         String content = new String(Files.readAllBytes(Paths.get(url.toURI())));
         String pckg = getPackageName(fullyQualifiedName);
         String className = getClassName(fullyQualifiedName);
